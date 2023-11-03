@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'PressStart2P';
+  src: url('PressStart2P.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  background-color: black;
+  color: white;
+  font-family: 'PressStart2P'
+}
+
+ul {
+  list-style-type: none;
+  text-align: center;
+}
+
+ul li::before {
+  content: "-"; /* Replace '•' with your desired character or content */
+  margin-right: 8px; /* Optional: Add space between the bullet and the text */
+}
+
+.content-container {
+  max-width: 500px; /* Set your desired maximum width */
+  margin: 0 auto; /* Center the content container horizontally */
+}
