@@ -1,0 +1,34 @@
+@font-face {
+  font-family: 'PressStart2P';
+  src: url('../fonts/PressStart2P.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  background-color: white;
+  color: black;
+  font-family: 'PressStart2P'
+}
+
+.content-container {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.content-container img {
+  max-width: 80%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+a {
+  color: #208ed9;
+}
+
+pcolor {
+  /* font-weight: bold; */
+  /* text-decoration: underline; */
+  color: #df7126;
+}

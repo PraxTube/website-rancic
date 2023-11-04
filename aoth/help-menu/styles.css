@@ -1,13 +1,13 @@
 @font-face {
   font-family: 'PressStart2P';
-  src: url('PressStart2P.woff') format('woff');
+  src: url('../fonts/PressStart2P.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
 body {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
   font-family: 'PressStart2P'
 }
 
