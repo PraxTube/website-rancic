@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'PressStart2P';
-  src: url('../../fonts/PressStart2P.woff') format('woff');
+  font-family: 'Daddy';
+  src: url('../../fonts/Daddy.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -8,7 +8,7 @@
 body {
   background-color: white;
   color: black;
-  font-family: 'PressStart2P'
+  font-family: 'Daddy'
 }
 
 .content-container {
@@ -22,16 +22,6 @@ body {
   height: auto;
   display: block;
   margin: 0 auto;
-}
-
-.top-bar {
-    background-color: rgba(255, 255, 255, 0.5);
-    color: #332233;
-    padding: 10px 0;
-    position: fixed;
-    top: 0; /* Position it at the top of the viewport */
-    width: 650px;
-    z-index: 1000; /* Set a high z-index to ensure it's above other content */
 }
 
 a {
