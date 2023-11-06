@@ -1,0 +1,6 @@
+pre {
+  background-color: #000000; /* Background color */
+  color: #FFFFFF; /* Text (font) color */
+  padding-top: 10px; /* Optional padding for spacing inside the code block */
+  border-radius: 10px; /* Optional rounded corners */
+}
