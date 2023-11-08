@@ -5,29 +5,20 @@ use std::path::Path;
 
 use scraper::{Html, Selector};
 
-fn fetch_headers(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-    let mut headers = Vec::new();
-
-    for file in files {
-        let html_content = read_to_string(file)?;
-
-        let document = Html::parse_document(&html_content);
-
-        let h1_selector = Selector::parse("h1").unwrap();
-        let h1_element = document.select(&h1_selector).next();
-
-        // Check if an <h1> element was found and print its content
-        if let Some(header) = h1_element {
-            headers.push(header.text().collect::<String>());
-        }
-    }
-    Ok(headers)
+struct Data {
+    files: Vec<String>,
+    headers: Vec<String>,
+    descriptions: Vec<String>,
+    images: Vec<String>,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let main_dir = "/var/www/html/blog/";
-    let files = fetch_html_files(main_dir)?;
+    let files = fetch_files(main_dir)?;
+
     let headers = fetch_headers(&files)?;
+    let descriptions = fetch_descriptions(&files)?;
+    let images = fetch_images(&files)?;
 
     let files = files
         .into_iter()
@@ -37,12 +28,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .to_string()
         })
         .collect();
-    let data = Data { files, headers };
+    let data = Data {
+        files,
+        headers,
+        descriptions,
+        images,
+    };
     write_html_content(data)?;
     Ok(())
 }
 
-fn fetch_html_files(directory_path: &str) -> Result<Vec<String>, std::io::Error> {
+fn fetch_files(directory_path: &str) -> Result<Vec<String>, std::io::Error> {
     let dir = Path::new(directory_path);
 
     if !dir.is_dir() {
@@ -57,9 +53,7 @@ fn fetch_html_files(directory_path: &str) -> Result<Vec<String>, std::io::Error>
     for entry in read_dir(dir)? {
         if let Ok(entry) = entry {
             if entry.path().is_dir() {
-                index_files.extend(fetch_html_files(
-                    &entry.path().to_string_lossy().to_string(),
-                )?)
+                index_files.extend(fetch_files(&entry.path().to_string_lossy().to_string())?)
             }
 
             let path = entry.path();
@@ -81,9 +75,71 @@ fn fetch_html_files(directory_path: &str) -> Result<Vec<String>, std::io::Error>
     Ok(index_files)
 }
 
-struct Data {
-    files: Vec<String>,
-    headers: Vec<String>,
+fn fetch_headers(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let mut headers = Vec::new();
+
+    for file in files {
+        let html_content = read_to_string(file)?;
+
+        let document = Html::parse_document(&html_content);
+
+        let h1_selector = Selector::parse("h1").unwrap();
+        let h1_element = document.select(&h1_selector).next();
+
+        // Check if an <h1> element was found and print its content
+        if let Some(header) = h1_element {
+            headers.push(header.text().collect::<String>());
+        }
+    }
+    Ok(headers)
+}
+
+fn fetch_descriptions(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let mut descriptions = Vec::new();
+
+    for file in files {
+        let html_content = read_to_string(file)?;
+        let document = Html::parse_document(&html_content);
+
+        let paragraph_selector = Selector::parse("p").unwrap();
+        let paragrapth_element = document.select(&paragraph_selector).next();
+
+        // Check if an <h1> element was found and print its content
+        match paragrapth_element {
+            Some(paragraph) => {
+                descriptions.push(paragraph.text().collect::<String>());
+            }
+            None => descriptions.push("NO CONTENT YET".to_string()),
+        }
+    }
+    Ok(descriptions)
+}
+
+fn fetch_images(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let mut images = Vec::new();
+
+    for file in files {
+        let html_content = read_to_string(file)?;
+        let document = Html::parse_document(&html_content);
+
+        let image_selector = Selector::parse("img").unwrap();
+        let image_element = document.select(&image_selector).next();
+
+        // Check if an <h1> element was found and print its content
+        let content = match image_element {
+            Some(image) => {
+                let image_src = image.value().attr("src");
+
+                match image_src {
+                    Some(src) => src,
+                    None => "ERROR: Image has no <code>src</code> attribute",
+                }
+            }
+            None => "NO IMAGE YET",
+        };
+        images.push(content.to_string());
+    }
+    Ok(images)
 }
 
 fn write_html_content(data: Data) -> Result<(), Box<dyn std::error::Error>> {
@@ -94,7 +150,16 @@ fn write_html_content(data: Data) -> Result<(), Box<dyn std::error::Error>> {
     assert!(data.files.len() == data.headers.len());
 
     for i in 0..data.files.len() {
-        content += &format!("<a href=\"{}\">{}</a>", data.files[i], data.headers[i]);
+        content += &format!(
+            "<h3 style=\"text-align: center;\"><a href=\"{}\">{}</a></h3>",
+            data.files[i], data.headers[i]
+        );
+        content += &format!("<p>{}</p>", data.descriptions[i]);
+        content += &format!(
+            "<a href=\"{}\"><img src=\"{}\" alt=\"{}\"></a>",
+            data.files[i], data.images[i], data.images[i]
+        );
+        content += "<div style=\"height: 20px;\"></div>";
     }
 
     let html_content = format!(
