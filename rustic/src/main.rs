@@ -3,11 +3,13 @@ use std::fs::{read_dir, read_to_string, File};
 use std::io::Write;
 use std::path::Path;
 
+use chrono::NaiveDate;
 use scraper::{Html, Selector};
 
 struct Data {
     files: Vec<String>,
     headers: Vec<String>,
+    dates: Vec<String>,
     descriptions: Vec<String>,
     images: Vec<String>,
 }
@@ -17,6 +19,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let files = fetch_files(main_dir)?;
 
     let headers = fetch_headers(&files)?;
+    let dates = fetch_dates(&files)?;
     let descriptions = fetch_descriptions(&files)?;
     let images = fetch_images(&files)?;
 
@@ -31,6 +34,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let data = Data {
         files,
         headers,
+        dates,
         descriptions,
         images,
     };
@@ -86,12 +90,38 @@ fn fetch_headers(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error:
         let h1_selector = Selector::parse("h1").unwrap();
         let h1_element = document.select(&h1_selector).next();
 
-        // Check if an <h1> element was found and print its content
         if let Some(header) = h1_element {
             headers.push(header.text().collect::<String>());
         }
     }
     Ok(headers)
+}
+
+fn fetch_dates(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let mut dates = Vec::new();
+
+    for file in files {
+        let html_content = read_to_string(file)?;
+
+        let document = Html::parse_document(&html_content);
+
+        let date_selector = Selector::parse("#blog-date").unwrap();
+        let date_element = document.select(&date_selector).next();
+
+        let date = match date_element {
+            Some(date) => {
+                let datetime = date.value().attr("datetime");
+
+                match datetime {
+                    Some(time) => time,
+                    None => "ERROR: Date has no <code>datetime</code> attribute",
+                }
+            }
+            None => "NO IMAGE YET",
+        };
+        dates.push(date.to_string());
+    }
+    Ok(dates)
 }
 
 fn fetch_descriptions(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error::Error>> {
@@ -104,7 +134,6 @@ fn fetch_descriptions(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::e
         let paragraph_selector = Selector::parse("p").unwrap();
         let paragrapth_element = document.select(&paragraph_selector).next();
 
-        // Check if an <h1> element was found and print its content
         match paragrapth_element {
             Some(paragraph) => {
                 descriptions.push(paragraph.text().collect::<String>());
@@ -125,7 +154,6 @@ fn fetch_images(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error::
         let image_selector = Selector::parse("img").unwrap();
         let image_element = document.select(&image_selector).next();
 
-        // Check if an <h1> element was found and print its content
         let content = match image_element {
             Some(image) => {
                 let image_src = image.value().attr("src");
@@ -151,13 +179,20 @@ fn write_html_content(data: Data) -> Result<(), Box<dyn std::error::Error>> {
 
     for i in 0..data.files.len() {
         content += &format!(
-            "<h3 style=\"text-align: center;\"><a href=\"{}\">{}</a></h3>",
+            "<h3><a href=\"{}\">{}</a></h3>",
             data.files[i], data.headers[i]
         );
-        content += &format!("<p>{}</p>", data.descriptions[i]);
+        content += &format!(
+            "<p class=\"blog-date\"><em>{}</em></p>",
+            format_datetime(&data.dates[i])
+        );
         content += &format!(
             "<a href=\"{}\"><img src=\"{}\" alt=\"{}\"></a>",
             data.files[i], data.images[i], data.images[i]
+        );
+        content += &format!(
+            "<p style=\"margin-bottom: 0;\">{} <a href=\"{}\"><em>Read more<em></a></p>",
+            data.descriptions[i], data.files[i]
         );
         content += "<div style=\"height: 20px;\"></div>";
     }
@@ -180,4 +215,16 @@ fn write_html_content(data: Data) -> Result<(), Box<dyn std::error::Error>> {
 
     file.write_all(html_content.as_bytes())?;
     Ok(())
+}
+
+fn format_datetime(input_date: &str) -> String {
+    let date = match NaiveDate::parse_from_str(input_date, "%Y-%m-%d") {
+        Ok(date) => date,
+        Err(err) => {
+            println!("failed to parse given input datetime, {}", err);
+            return "FAILED TO PARSE DATE".to_string();
+        }
+    };
+
+    date.format("%B%e, %Y").to_string()
 }
