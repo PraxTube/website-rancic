@@ -3,105 +3,15 @@
 <head lang="en">
   <title>Blog - Rancic</title>
   <link rel="stylesheet" type="text/css" href="styles/styles.css">
-  <link rel="stylesheet" type="text/css" href="../styles/top-bar.css">
 </head>
 <body>
 
 <div class=content-container>
-  <div class="top-bar">
-    <div style="display:flex; justify-content: space-between;">
-      <a style="text-decoration: none;" href="../"><pcolor>rancic</pcolor>.org</a>
-      <div style="display:flex;">
-        <a style="text-decoration: none;" href=".">blog</a>
-        <a style="text-decoration: none; margin-left: 20px;" href="../about">about</a>
-      </div>
-    </div>
-  </div>
-
-  <a href="making-a-game-in-bevy/index.html">test</a>
+  <script src="/top-bar/top-bar-script.js"></script>
 
   <h1>Blogs</h1>
 
-  <ul id="blog-list"></ul>
-
-  <script>
-     const blogList = document.getElementById("blog-list");
-
-     // Define the URL of your blog directory
-     const blogDir = './';
-
-fetch(blogDir)
-  .then((response) => response.text())
-  .then((html) => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-
-    // Get all anchor links with href ending in index.html from subdirectories
-    const links = Array.from(doc.querySelectorAll('a[href$="/index.html"]'));
-
-    // Fetch and process each index.html file
-    links.forEach((link) => {
-      const url = new URL(link.getAttribute('href'), window.location.href);
-      const path = url.pathname;
-
-      // Get the directory path (excluding the filename)
-      const directoryPath = path.substring(0, path.lastIndexOf('/'));
-
-      // Fetch the index.html file
-      fetch(path)
-        .then((response) => response.text())
-        .then((html) => {
-          const subDoc = parser.parseFromString(html, 'text/html');
-          const h1 = subDoc.querySelector('h1');
-
-          if (h1) {
-            // Extract and use the h1 content
-            const title = h1.textContent;
-
-            // Create a list item and link for each blog entry
-            const listItem = document.createElement('li');
-            const linkElement = document.createElement('a');
-            linkElement.textContent = title;
-            linkElement.setAttribute('href', path);
-            listItem.appendChild(linkElement);
-            blogList.appendChild(listItem);
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching index.html:', error);
-        });
-    });
-  })
-  .catch((error) => {
-    console.error('Error fetching blog list:', error);
-  });
-  </script>
-
-    <button onclick="fetchIndexHTML()">Fetch index.html</button>
-    <ul id="indexHtmlList"></ul>
-    
-    <script>
-        function fetchIndexHTML() {
-            const apiUrl = './fetch-files.php';
-            
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    const indexHtmlList = document.getElementById('indexHtmlList');
-                    indexHtmlList.innerHTML = '';
-                    
-                    data.forEach(directory => {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = `Found index.html in directory: ${directory}`;
-                        indexHtmlList.appendChild(listItem);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
-        }
-    </script>
+  A collection of my blogs which I am most likely going to reference manually here. I did spend quite some time trying to get javascript and php to work together to fetch the index.html files of the blogs, and while it did work to some degree, it just doesn't seem that worth it right now. It also seems very brittle and it's a bit of a performance bottleneck (though only if I would have like >1000 blogs).
 
   <div style="height: 1000px;"></div>
 </div>

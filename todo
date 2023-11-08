@@ -1,1 +1,0 @@
-So it seems like the issue is that php needs to return something specific, and then java script can read that in. I should figure out how to make use of that.
