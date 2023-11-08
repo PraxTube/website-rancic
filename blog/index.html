@@ -38,7 +38,6 @@ fetch(blogDir)
 
     // Get all anchor links with href ending in index.html from subdirectories
     const links = Array.from(doc.querySelectorAll('a[href$="/index.html"]'));
-  console.log('fetched links: ', links);
 
     // Fetch and process each index.html file
     links.forEach((link) => {
@@ -77,6 +76,32 @@ fetch(blogDir)
     console.error('Error fetching blog list:', error);
   });
   </script>
+
+    <button onclick="fetchIndexHTML()">Fetch index.html</button>
+    <ul id="indexHtmlList"></ul>
+    
+    <script>
+        function fetchIndexHTML() {
+            const apiUrl = './fetch-files.php';
+            
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    const indexHtmlList = document.getElementById('indexHtmlList');
+                    indexHtmlList.innerHTML = '';
+                    
+                    data.forEach(directory => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `Found index.html in directory: ${directory}`;
+                        indexHtmlList.appendChild(listItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+    </script>
 
   <div style="height: 1000px;"></div>
 </div>
