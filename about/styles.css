@@ -1,0 +1,70 @@
+@font-face {
+  font-family: 'Daddy';
+  src: url('../../fonts/Daddy.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  background-color: white;
+  color: black;
+  font-family: 'Daddy'
+}
+
+a {
+  color: #208ed9;
+}
+
+h1 {
+  margin-bottom: 5px;
+}
+
+.content-container {
+  max-width: 650px;
+  margin: 0 auto;
+  margin-top: 60px;
+}
+
+.content-container img {
+  max-width: 80%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-container img {
+  margin: 30px;
+  border-radius: 100%;
+  width: 200px;
+  border: 5px solid;
+  border-color: #df7126;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-container img {
+  width: 50px;
+  margin: 20px;
+  transition: opacity transform;
+}
+
+.icon-container img:hover {
+  opacity: 0.3; /* Reduce opacity on hover */
+  transform: scale(0.9); /* Scale up the image on hover */
+}
+
+pcolor {
+  /* font-weight: bold; */
+  /* text-decoration: underline; */
+  color: #df7126;
+}
