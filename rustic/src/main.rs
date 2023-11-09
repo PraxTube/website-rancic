@@ -7,15 +7,16 @@ use chrono::NaiveDate;
 use scraper::{Html, Selector};
 
 struct Data {
-    files: Vec<String>,
-    headers: Vec<String>,
-    dates: Vec<String>,
-    descriptions: Vec<String>,
-    images: Vec<String>,
+    file: String,
+    header: String,
+    date: String,
+    description: String,
+    image: String,
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let main_dir = "/var/www/html/blog/";
+    let mut data = Vec::new();
     let files = fetch_files(main_dir)?;
 
     let headers = fetch_headers(&files)?;
@@ -23,7 +24,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let descriptions = fetch_descriptions(&files)?;
     let images = fetch_images(&files)?;
 
-    let files = files
+    let files: Vec<String> = files
         .into_iter()
         .map(|s| {
             s.trim_start_matches(main_dir)
@@ -31,13 +32,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .to_string()
         })
         .collect();
-    let data = Data {
-        files,
-        headers,
-        dates,
-        descriptions,
-        images,
-    };
+    for i in 0..files.len() {
+        data.push(Data {
+            file: files[i].to_owned(),
+            header: headers[i].to_owned(),
+            date: dates[i].to_owned(),
+            description: descriptions[i].to_owned(),
+            image: images[i].to_owned(),
+        })
+    }
+    data.sort_by(|a, b| b.date.cmp(&a.date));
     write_html_content(data)?;
     Ok(())
 }
@@ -90,9 +94,11 @@ fn fetch_headers(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error:
         let h1_selector = Selector::parse("h1").unwrap();
         let h1_element = document.select(&h1_selector).next();
 
-        if let Some(header) = h1_element {
-            headers.push(header.text().collect::<String>());
-        }
+        let h1 = match h1_element {
+            Some(header) => header.text().collect::<String>(),
+            None => String::new(),
+        };
+        headers.push(h1);
     }
     Ok(headers)
 }
@@ -170,28 +176,25 @@ fn fetch_images(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error::
     Ok(images)
 }
 
-fn write_html_content(data: Data) -> Result<(), Box<dyn std::error::Error>> {
+fn write_html_content(data: Vec<Data>) -> Result<(), Box<dyn std::error::Error>> {
     let mut file = File::create("/var/www/html/blog/toc/toc.html")?;
-
     let mut content = String::new();
 
-    assert!(data.files.len() == data.headers.len());
-
-    for i in 0..data.files.len() {
-        content += &format!("<h3>{}</h3>", data.headers[i]);
+    for d in data {
+        content += &format!("<h3>{}</h3>", d.header);
         content += &format!(
             "<p class=\"blog-date\"><em>{}</em></p>",
-            format_datetime(&data.dates[i])
+            format_datetime(&d.date)
         );
-        if !data.images[i].is_empty() {
+        if !d.image.is_empty() {
             content += &format!(
                 "<a href=\"{}\"><img src=\"{}\" alt=\"{}\"></a>",
-                data.files[i], data.images[i], data.images[i]
+                d.file, d.image, d.image
             );
         }
         content += &format!(
             "<p style=\"margin-bottom: 0;\">{} <a href=\"{}\"><em>Read more</em></a></p>",
-            data.descriptions[i], data.files[i]
+            d.description, d.file
         );
         content += "<div style=\"height: 20px;\"></div>";
     }
