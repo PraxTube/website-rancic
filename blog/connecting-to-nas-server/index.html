@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <title>Setting up a NAS Server</title>
+  <link rel="stylesheet" type="text/css" href="../styles/styles.css">
+  <link rel="stylesheet" type="text/css" href="../../styles/code-block.css">
+</head>
+<body>
+
+<div class=content-container>
+  <script src="/top-bar/top-bar-script.js"></script>
+
+  <h1>Connecting to a NAS server from Windows, Linux and MacOS</h1>
+  <time id="blog-date" datetime="2023-11-9">DATE</time>
+
+  <p>
+    In this short tutorial I will show you how you can connect to your
+    local NAS server that's been configured with Samba
+    from all major Desktop OS, Windows, Linux and MacOS.
+  </p>
+
+  <h2>Connecting from Windows</h2>
+
+  <p>
+    On windows, if you want to connect to a NAS server and have it
+    accessable as a native folder, follow
+    <a href="https://kb.synology.com/en-global/DSM/help/DSM/Tutorial/store_with_windows?version=6">this tutorial</a>.
+    Note that the folder you need to specify has the following structure.
+  </p>
+
+  <pre>
+\\192.168.178.98\first-nas-folder
+  </pre>
+
+  <p>
+    If you followed the tutorial on
+    <a href="/blog/setting-up-nas-server">how to set up a nas server</a>,
+    then you will have noticed that the IP address is the private
+    IP address of our NAS server and the directory name is the
+    name we specified in the <code>smb.conf</code>.
+    All that is left for you to do is to connect with your credentials.
+  </p>
+
+  <p>
+    Note that you must have your network as a <em>private network</em>.
+    Otherwise you will not be able to even discover you local NAS server.
+    More on this <a href="https://support.microsoft.com/en-us/windows/make-a-wi-fi-network-public-or-private-in-windows-0460117d-8d3e-a7ac-f003-7a0da607448d#:~:text=Select%20Start%20%2C%20then%20type%20settings,Public%20(Recommended)%20or%20Private.">here</a>.
+
+  <h2>Connecting from MacOS</h2>
+
+  <p>
+    Follow <a href="https://kb.synology.com/en-my/DSM/tutorial/access_nas_from_mac">this</a>
+    tutorial to connect to a NAS server from MacOS. Note that you will
+    have to write the following as the server address.
+  </p>
+
+  <pre>
+smb://192.168.178.98/first-nas-folder
+  </pre>
+
+  <p>
+    If you followed the tutorial on
+    <a href="/blog/setting-up-nas-server">how to set up a nas server</a>,
+    then you will have noticed that the IP address is the private
+    IP address of our NAS server and the directory name is the
+    name we specified in the <code>smb.conf</code>.
+    All that is left for you to do is to connect with your credentials.
+  </p>
+
+  <h2>Connecting from Linux</h2>
+
+  <p>
+    Connecting to you NAS server from Linux can be a little bit more tricky.
+    If you want to use the a file explorer then it highly depends on the
+    desktop environment you are using. It <em>should</em> be similar to
+    the Windows file explorer, but again, as there are so many desktop
+    environments and even more file explorers it can vary quite heavily.
+    I am going to show you an approach using the terminal in the following
+    sections. This will work on <strong>every</strong> linux distro,
+    regardless of desktop environment. It will even work if you don't
+    have any desktop environment at all!
+  </p>
+
+  <h3>Creating SSH Short Handle</h3>
+
+  <p>
+    In order to make our lives easier, let's create a hostname
+    for our NAS private IP address. We do this by adding the following
+    line to <code>~/.ssh/config</code>.
+  </p>
+
+  <pre>
+Host server-name
+  HostName 192.168.178.98
+  User your-server-user
+  </pre>
+
+  <p>
+    Replace the <code>HostName</code> with the private IP address of your
+    NAS server and <code>User</code> with the username of your NAS server.
+    Note that the private IP address here is the one of our NAS server.
+    This should look familiar to you if you followed the tutorial on
+    <a href="/blog/setting-up-nas-server">how to set up a nas server</a>.
+  </p>
+
+  <h3>Connecting to NAS server</h3>
+
+  <p>
+    Before we actually set up a connection to the NAS server, we first
+    need to create a directory where the content of the NAS server should go into.
+  </p>
+
+  <pre>
+mkdir ~/my-nas-folder
+  </pre>
+
+  <p>
+    Now we can add the following content to the <code>/etc/fstab</code> file.
+  </p>
+
+  <pre>
+//server-name/first-nas-folder /home/your-desktop-user/my-nas-folder cifs credentials=/home/your-desktop-user/.samba/your-desktop-user-credentials,uid=your-desktop-user,gid=your-desktop-user0 0
+  </pre>
+
+  <ul>
+    <li>first-nas-folder: Replace with the name you specified on your NAS folder</li>
+    <li>server-name: Replace with the name you specified in <code>~/.ssh/config</code></li>
+    <li>your-desktop-user: Replace with you linux user name</li>
+    <li>my-nas-folder: Replace with the directory the nas content should go to</li>
+  </ul>
+
+  <p>
+    Now test to see if everything went well by running the following.
+  </p>
+
+  <pre>
+sudo mount -a
+  </pre>
+
+  <p>
+    If you don't get any error messages,
+    then you should see the contents of you nas in side of your
+    <code>~/my-nas-folder</code>.
+    On every mount your machine will automatically
+    connect to the nas server. You should try it by rebooting your machine.
+    Once you made sure this works, you are all done!
+  </p>
+
+  <div style="height: 200px;"></div>
+</div>
+
+<script src="/blog/scripts/post-blog.js"></script>
+
+</body>
+</html>

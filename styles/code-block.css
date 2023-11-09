@@ -1,6 +1,9 @@
 pre {
-  background-color: #000000; /* Background color */
-  color: #FFFFFF; /* Text (font) color */
-  padding-top: 10px; /* Optional padding for spacing inside the code block */
+  background-color: #222244;
+  color: #FFFFFF;
+  padding-top: 15px;
   border-radius: 10px; /* Optional rounded corners */
+  padding-left: 40px;
+  padding-right: 40px;
+  word-break: break-all;
 }

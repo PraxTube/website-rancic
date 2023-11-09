@@ -160,10 +160,10 @@ fn fetch_images(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error::
 
                 match image_src {
                     Some(src) => src,
-                    None => "ERROR: Image has no <code>src</code> attribute",
+                    None => "ERROR: Image has no src attribute",
                 }
             }
-            None => "NO IMAGE YET",
+            None => "",
         };
         images.push(content.to_string());
     }
@@ -178,20 +178,19 @@ fn write_html_content(data: Data) -> Result<(), Box<dyn std::error::Error>> {
     assert!(data.files.len() == data.headers.len());
 
     for i in 0..data.files.len() {
-        content += &format!(
-            "<h3><a href=\"{}\">{}</a></h3>",
-            data.files[i], data.headers[i]
-        );
+        content += &format!("<h3>{}</h3>", data.headers[i]);
         content += &format!(
             "<p class=\"blog-date\"><em>{}</em></p>",
             format_datetime(&data.dates[i])
         );
+        if !data.images[i].is_empty() {
+            content += &format!(
+                "<a href=\"{}\"><img src=\"{}\" alt=\"{}\"></a>",
+                data.files[i], data.images[i], data.images[i]
+            );
+        }
         content += &format!(
-            "<a href=\"{}\"><img src=\"{}\" alt=\"{}\"></a>",
-            data.files[i], data.images[i], data.images[i]
-        );
-        content += &format!(
-            "<p style=\"margin-bottom: 0;\">{} <a href=\"{}\"><em>Read more<em></a></p>",
+            "<p style=\"margin-bottom: 0;\">{} <a href=\"{}\"><em>Read more</em></a></p>",
             data.descriptions[i], data.files[i]
         );
         content += "<div style=\"height: 20px;\"></div>";

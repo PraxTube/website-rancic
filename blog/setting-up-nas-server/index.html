@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <title>Setting up a NAS Server</title>
+  <link rel="stylesheet" type="text/css" href="../styles/styles.css">
+  <link rel="stylesheet" type="text/css" href="../../styles/code-block.css">
+</head>
+<body>
+
+<div class=content-container>
+  <script src="/top-bar/top-bar-script.js"></script>
+
+  <h1>Setting up a NAS server</h1>
+  <time id="blog-date" datetime="2023-11-9">DATE</time>
+
+  <p>
+    A NAS (network-attached storage) server is very useful
+    for storing and distributing data on a local network.
+    In this post, I am going to show you how you can create
+    your own ubuntu NAS server.
+  </p>
+
+  <h2>Prerequisites</h2>
+
+  <p>
+    In order to run our own NAS server we obviously first need a server.
+    Go ahead and install the an ubuntu server on a free device.
+    The <a href="https://ubuntu.com/tutorials/install-ubuntu-server#1-overview">ubuntu install instructions</a>
+    are very simple, you should be able to follow them and have a running server in less then an hour. I suggest using the non GUI server, at least that's what I assuming
+    you will have in this tutorial. It does work with the desktop
+    server as well though.
+  </p>
+
+  <p>
+    Once that is all set up, we are going to install some packages
+    we will need to for the NAS server. First, let's go ahead and
+    install a better package manager called
+    <a href="https://gitlab.com/volian/nala">nala</a>.
+  </p>
+
+  <pre>
+    sudo apt install nala
+  </pre>
+
+  <p>
+    Once that is done, we call use <code>nala</code>
+    instead of <code>apt</code> to install packages.
+    Let's go ahead and use it to install a text editor.
+  </p>
+
+  <pre>
+    sudo nala install vim
+  </pre>
+
+  <p>
+    You should see a much cleaner visual for the installing process.
+    While it would be totally fine to use <code>apt</code>,
+    you benifit from using <code>nala</code> as it not only looks
+    a lot better and is more readable, it also has quite a few
+    features.
+  <p>
+
+  <h2>Setting a Static IP Address</h2>
+
+  <p>
+    With all of this setup complete, we can finally begin
+    to setup our NAS server. To start we will make our private
+    IP address static.
+    Every device in your local network has a private IP address
+    which your internet router uses to know which data package
+    needs to go where. These private IP addresses can change
+    when you for example change your router. This is not a problem
+    for in most cases, but when using a NAS server we will
+    access our server through the private IP address.
+    So we are going to need to make the private IP address static.
+  </p>
+
+  <p>
+    First of all we will need to figure out what IP addresses our
+    server has. We do this by simply running the following command.
+  </p>
+
+  <pre>
+ip addr | grep inet
+  </pre>
+
+  <p>
+    This should output something similar to this output.
+  </p>
+
+  <pre>
+inet 127.0.0.1/8 scope host lo
+inet6 ::1/128 scope host 
+inet 192.168.178.98/24 metric 100 brd 192.168.178.255 scope global dynamic enp3s0
+inet6 fd00::226a:8aff:fe28:7bce/64 scope global dynamic mngtmpaddr noprefixroute 
+inet6 fe80::226a:8aff:fe28:7bce/64 scope link 
+  </pre>
+
+  <p>
+    My server has a private IP address of
+    <code>192.168.178.98</code>. Your will be different
+    but will probably also start with something like
+    <code>192.168</code>.
+  </p>
+
+  <p>
+    We are also going to need to know the network interface of our server.
+    To achieve this, simply run this command.
+  </p>
+
+  <pre>
+ip link
+  </pre>
+
+  <p>
+    Something like the following output should be displayed.
+    My network interface is <code>enp3s0</code>, yours will be similar.
+    Note that <code>en</code> stands for ethernet here, so if your server
+    is using that it should start with the prefix <code>en</code>.
+    If you are using wifi (on a laptop for example), then it will start
+    with <code>w</code>, in my case I have the interface <code>wlp6s0b1</code>
+    which is indeed a wifi port (I am using a laptop as a server).
+  </p>
+
+  <pre>
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp3s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether 20:6a:8a:28:7b:ce brd ff:ff:ff:ff:ff:ff
+3: wlp6s0b1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether 18:f4:6a:be:c4:d7 brd ff:ff:ff:ff:ff:ff
+  </pre>
+
+  <p>
+    Now we can use our private IP address and turn it into a static one.
+    To do this, we will create the file <code>/etc/netplan/01-network-manager-all.yaml</code> with the following content.
+  </p>
+
+  <pre>
+network:
+  renderer: networkd
+  ethernets:
+    enp3s0:
+      addresses:
+        - 192.168.178.98/24
+      nameservers:
+        addresses: [192.168.178.1, 8.8.8.8]
+      routes:
+        - to: default
+          via: 192.168.1.98
+  version: 2
+  </pre>
+
+  <p>
+    Here you obviously need to replace the private IP address with your own.
+    Note that <code>8.8.8.8</code> is a public google domain used as a fallback.
+    The only thing left to do is run this command we can finally move on.
+  </p>
+
+  <pre>
+    sudo netplan apply
+  </pre>
+
+  <h2>Configuring Samba</h2>
+
+  <p>
+    Next we are going to use <a href="https://www.samba.org/">samba</a>
+    to handle the actual connection of users to our server storage.
+    We start off by installing samba.
+  </p>
+
+  <pre>
+sudo nala install samba
+sudo systemctl status smbd
+  </pre>
+
+  <pre>
+smbd.service - Samba SMB Daemon
+     Loaded: loaded (/lib/systemd/system/smbd.service)
+     Active: active (running) since Sun 2023-10-22 12:46:40 UTC
+
+...
+  </pre>
+
+  <p>
+    Running this command should show you that samba is now active.
+    I cut out the rest of it as it's not important, but if nala is inactive
+    or there were some errors then you should check the rest of the output.
+    You may need to reboot your server, nala will have told you if you need.
+  </p>
+
+  <p>
+    Once you made sure samba is running, we are going to configure it.
+    Open the file <code>/etc/samba/smb.conf</code> with the editor of
+    your choice (I am gonna use vim which we installed previously).
+  </p>
+
+  <pre>
+sudo vim /etc/samba/smb.conf
+  </pre>
+
+  <p>
+    Place the following content at the end of the file.
+    Allow me to explain what these terms mean.
+  </p>
+
+  <pre>
+[first-nas-folder]
+   comment = My very first nas folder
+   path = "/home/user/folder"
+   guest ok = no
+   browseable = yes
+   create mask = 0777
+   directory mask = 0777
+   writable = yes
+   read only = no
+  </pre>
+
+<ul>
+  <li><strong>[first-nas-folder]</strong>: The name of this nas entry</li>
+  <li><strong>comment</strong>: My very first NAS folder - Description of the folder</li>
+  <li><strong>path</strong>: "/home/user/folder" - The absolute path to the directory on the file system that will be shared.</li>
+  <li><strong>guest ok</strong>: no - Specifies whether guest users are allowed to access the shared folder without authentication.</li>
+  <li><strong>browseable</strong>: yes - Determines whether the folder is visible and accessible when browsing the shared resources.</li>
+  <li><strong>create mask</strong>: 0777 - Sets the default permissions (mask) for newly created files within the shared folder.</li>
+  <li><strong>directory mask</strong>: 0777 - Sets the default permissions (mask) for newly created directories within the shared folder.</li>
+  <li><strong>writable</strong>: yes - Indicates whether users are allowed to write (modify) files within the shared folder.</li>
+  <li><strong>read only</strong>: no - The opposite of 'writable,' indicating that the shared folder is not read-only; users can write to it.</li>
+</ul>
+
+  <p>
+    You can configure as many entries as you want.
+    Let's say you would like to create another entry just for movies,
+    then you could add the following to you <code>smb.conf</code>.
+    Note that the mask <code>0777</code> means that everybody
+    access to the server has read and write access.
+  </p>
+
+  <pre>
+[movies]
+   comment = Movies Only Share
+   path = /home/user/movies-folder
+   guest ok = no
+   browseable = yes
+   create mask = 0777
+   directory mask = 0777
+   writable = yes
+   read only = no
+  </pre>
+
+  <h2>Settup up Samba Users</h2>
+
+  <p>
+    The final step we need to do is to add samba users.
+    This will allow users to connect to our server
+    using the credentials we will specify now.
+    First, create a new user.
+  </p>
+
+  <pre>
+sudo useradd my-new-user
+  </pre>
+
+  <p>
+    Then we will add the user to samba.
+    It will prompt you to create a password
+    for this user. Note that the person you is going to use this
+    on their desktop OS will need this password in order to connect
+    to the NAS server.
+  </p>
+
+  <pre>
+sudo smbpasswd -a my-new-user
+  </pre>
+
+  <p>
+    Finally let's apply our changes to samba by running the following
+    two commands.
+  </p>
+
+  <pre>
+sudo ufw allow samba
+sudo systemctl restart smbd
+  </pre>
+
+  <p>
+    That is it! Your NAS server is all set up now.
+    The only thing left to do is to connect to it from your desktop OS.
+    I created a separate tutorial for that as this one is already
+    quite long, you can
+    <a href="/blog/connecting-to-nas-server/">read it here</a>.
+  </p>
+
+  <div style="height: 200px;"></div>
+</div>
+
+<script src="/blog/scripts/post-blog.js"></script>
+
+</body>
+</html>
