@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <title>Mrtui</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="/styles/styles.css">
+  <link rel="stylesheet" type="text/css" href="/styles/code-block.css">
+  <link rel="stylesheet" type="text/css" href="../styles/styles.css">
+</head>
+<body>
+
+<div class=content-container>
+  <script src="/top-bar/top-bar-script.js"></script>
+
+  <h1>Fetching Bitcoin Mempool Data from Terminal</h1>
+  <time id="blog-date" datetime="2023-09-08">DATE</time>
+
+  <img src="/blog/mrtui/showcase.jpg">
+
+  <p>
+    For those of us who are doing most of their work in the terminal,
+    it can be very annoying to switch to a web browser for small tasks.
+    For instance, looking something up like the current block height
+    in the Bitcoin network or the current network fees.
+    Granted, most people probably don't mind, but I do!
+    So I wrote a little CLI tool to fetch some data from mempool.space
+    and display the info in the terminal.
+  </p>
+
+  <pre>
+╭─────806_715──────╮  ╭─────806_714──────╮  ╭─────806_713──────╮  ╭─────806_712──────╮
+│   ≈ 19 sat/vB    │  │   ≈ 17 sat/vB    │  │   ≈ 19 sat/vB    │  │   ≈ 26 sat/vB    │
+│ 16 - 1508 sat/vB │  │ 16 - 302 sat/vB  │  │ 17 - 302 sat/vB  │  │ 19 - 1213 sat/vB │
+│                  │  │                  │  │                  │  │                  │
+│     2.00 MB      │  │     1.74 MB      │  │     1.49 MB      │  │     1.61 MB      │
+│    3,663 txs     │  │    2,790 txs     │  │    2,589 txs     │  │    3,516 txs     │
+│      F2Pool      │  │   Foundry USA    │  │     AntPool      │  │      ViaBTC      │
+│                  │  │                  │  │                  │  │                  │
+│  20 minutes ago  │  │  30 minutes ago  │  │  39 minutes ago  │  │  54 minutes ago  │
+╰──────────────────╯  ╰──────────────────╯  ╰──────────────────╯  ╰──────────────────╯
+╭─────806_711──────╮  ╭─────806_710──────╮  ╭─────806_709──────╮  ╭─────806_708──────╮
+│   ≈ 15 sat/vB    │  │   ≈ 16 sat/vB    │  │   ≈ 21 sat/vB    │  │   ≈ 18 sat/vB    │
+│ 15 - 256 sat/vB  │  │ 15 - 317 sat/vB  │  │ 18 - 697 sat/vB  │  │ 16 - 302 sat/vB  │
+│                  │  │                  │  │                  │  │                  │
+│     1.86 MB      │  │     1.79 MB      │  │     1.66 MB      │  │     1.52 MB      │
+│    4,706 txs     │  │    3,267 txs     │  │    3,141 txs     │  │    2,278 txs     │
+│    MARA Pool     │  │     AntPool      │  │      F2Pool      │  │      ViaBTC      │
+│                  │  │                  │  │                  │  │                  │
+│   1 hours ago    │  │   1 hours ago    │  │   1 hours ago    │  │   2 hours ago    │
+╰──────────────────╯  ╰──────────────────╯  ╰──────────────────╯  ╰──────────────────╯
+
+╭───────Halving in: 7 months, 84%────────╮  ╭────Difficulty Adj. in: 11 days, 16%────╮
+│█████████████████████████████████       │  │██████                                  │
+╰────────────────────────────────────────╯  ╰────────────────────────────────────────╯
+  </pre>
+
+  <p>
+    The output is pretty self-explanatory and is kept as similar to the
+    mempool.space layout as possible.
+    However, it is static data, meaning we only get the receive data once.
+    If you are looking for a live data feed
+    (like it is on the mempool.space website) then check out
+    <a href="https://github.com/mempool/mempool-cli">mempool-cli</a>.
+  </p>
+
+  <p>
+    The program is written in Rust, in case you don't have Rust by now,
+    simply install it by running the
+    <a href="https://rustup.rs/">rustup command</a>.
+    It's literally just a one command to install the whole language.
+    Once rust is all set up, you can install
+    <a href="https://github.com/PraxTube/mrtui">Mr. TUI (Mempool Rust Terminal UI)</a>
+    by simply running this command.
+  </p>
+
+  <pre>
+cargo install mrtui
+  </pre>
+
+  <p>
+    Then, whenever you want to output the current blockchain data, run the following.
+  </p>
+
+  <pre>
+    mrtui
+  </pre>
+
+  <p>
+    That's it! Now you can get simple blockchain information
+    about the bitcoin network through the terminal.
+  </p>
+
+  <div style="height: 200px;"></div>
+</div>
+
+<script src="/blog/scripts/post-blog.js"></script>
+
+</body>
+</html>

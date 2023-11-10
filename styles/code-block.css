@@ -5,5 +5,5 @@ pre {
   border-radius: 10px; /* Optional rounded corners */
   padding-left: 40px;
   padding-right: 40px;
-  word-break: break-all;
+  overflow-x: auto;
 }
