@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'Daddy';
+  src: url('../../fonts/Daddy.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  background-color: white;
+  color: black;
+  font-family: 'Daddy'
+}
+
+a {
+  color: #208ed9;
+}
+
+.content-container {
+  max-width: 650px;
+  margin: 0 auto;
+  margin-top: 60px;
+}
+
+.content-container img {
+  max-width: 80%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+pcolor {
+  /* font-weight: bold; */
+  /* text-decoration: underline; */
+  color: #df7126;
+}

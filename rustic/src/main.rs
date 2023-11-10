@@ -6,6 +6,7 @@ use std::path::Path;
 use chrono::NaiveDate;
 use scraper::{Html, Selector};
 
+#[derive(Clone)]
 struct Data {
     file: String,
     header: String,
@@ -42,7 +43,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         })
     }
     data.sort_by(|a, b| b.date.cmp(&a.date));
-    write_html_content(data)?;
+    write_blog_toc(data.clone())?;
+    if data.len() > 0 {
+        write_recent_blogs(data[0..data.len().min(2)].to_vec())?;
+    } else {
+        println!("WARN: There are no blogs, the length is 0");
+    }
     Ok(())
 }
 
@@ -176,8 +182,51 @@ fn fetch_images(files: &Vec<String>) -> Result<Vec<String>, Box<dyn std::error::
     Ok(images)
 }
 
-fn write_html_content(data: Vec<Data>) -> Result<(), Box<dyn std::error::Error>> {
+fn write_blog_toc(data: Vec<Data>) -> Result<(), Box<dyn std::error::Error>> {
     let mut file = File::create("/var/www/html/blog/toc/toc.html")?;
+    let mut content = String::new();
+
+    for d in data {
+        content += &format!("<h3>{}</h3>", d.header);
+        content += &format!(
+            "<p class=\"blog-date\"><em>{}</em></p>",
+            format_datetime(&d.date)
+        );
+        if !d.image.is_empty() {
+            content += &format!(
+                "<a href=\"{}\"><img src=\"{}\" alt=\"{}\"></a>",
+                d.file, d.image, d.image
+            );
+        }
+        content += &format!(
+            "<p style=\"margin-bottom: 0;\">{} <a href=\"{}\"><em>Read more</em></a></p>",
+            d.description, d.file
+        );
+        content += "<div style=\"height: 20px;\"></div>";
+    }
+
+    let html_content = format!(
+        "
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+{}
+
+</body>
+</html>
+",
+        content
+    );
+
+    file.write_all(html_content.as_bytes())?;
+    Ok(())
+}
+
+fn write_recent_blogs(data: Vec<Data>) -> Result<(), Box<dyn std::error::Error>> {
+    let mut file = File::create("/var/www/html/main/recent-blogs/recent-blogs.html")?;
     let mut content = String::new();
 
     for d in data {
