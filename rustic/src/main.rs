@@ -187,6 +187,7 @@ fn write_blog_toc(data: Vec<Data>) -> Result<(), Box<dyn std::error::Error>> {
     let mut content = String::new();
 
     for d in data {
+        println!("{:?}", d.file);
         content += &format!("<h3>{}</h3>", d.header);
         content += &format!(
             "<p class=\"blog-date\"><em>{}</em></p>",
@@ -230,6 +231,15 @@ fn write_recent_blogs(data: Vec<Data>) -> Result<(), Box<dyn std::error::Error>>
     let mut content = String::new();
 
     for d in data {
+        let d = Data {
+            file: format!("blog/{}", d.file),
+            header: d.header,
+            date: d.date,
+            description: d.description,
+            image: d.image,
+        };
+
+        println!("{:?}", d.file);
         content += &format!("<h3>{}</h3>", d.header);
         content += &format!(
             "<p class=\"blog-date\"><em>{}</em></p>",
