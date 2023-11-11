@@ -107,12 +107,27 @@ Host server-name
   <h3>Connecting to NAS server</h3>
 
   <p>
-    Before we actually set up a connection to the NAS server, we first
+    Before we can actually set up the connection to the NAS server, we first
     need to create a directory where the content of the NAS server should go into.
+    We will also need to create a credentials file for fstab to use on boot.
   </p>
 
   <pre>
 mkdir ~/my-nas-folder
+mkdir -p ~/.config/nas/
+touch ~/.config/nas/credentials
+  </pre>
+
+  <p>
+    Inside of the <code>~/.config/nas/credentials</code> file,
+    add the following content with your username and password
+    of the samba account you created on your NAS server,
+    <strong>NOT</strong> your credentials of the server itself.
+  </p>
+
+  <pre>
+username=samba-account-user
+password=samba-account-password
   </pre>
 
   <p>
@@ -120,7 +135,7 @@ mkdir ~/my-nas-folder
   </p>
 
   <pre>
-//server-name/first-nas-folder /home/your-desktop-user/my-nas-folder cifs credentials=/home/your-desktop-user/.samba/your-desktop-user-credentials,uid=your-desktop-user,gid=your-desktop-user0 0
+//server-name/first-nas-folder /home/your-desktop-user/my-nas-folder cifs credentials=/home/your-desktop-user/.config/nas/credentials,uid=your-desktop-user,gid=your-desktop-user 0 0
   </pre>
 
   <ul>
@@ -129,6 +144,15 @@ mkdir ~/my-nas-folder
     <li>your-desktop-user: Replace with you linux user name</li>
     <li>my-nas-folder: Replace with the directory the nas content should go to</li>
   </ul>
+
+  <p>
+    Next make sure <code>cifs</code> package is installed.
+  </p>
+
+  <pre>
+sudo apt-get install cifs-utils
+sudo systemctl daemon-reload
+  </pre>
 
   <p>
     Now test to see if everything went well by running the following.
