@@ -1,3 +1,11 @@
+code {
+  background-color: #EEEEEE;
+  color: #df7126;
+  border-radius: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 pre {
   background-color: #222244;
   color: #FFFFFF;
