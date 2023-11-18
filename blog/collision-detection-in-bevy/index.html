@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <title>Collision Detection in Bevy</title>
+  <link rel="stylesheet" type="text/css" href="/styles/styles.css">
+  <link rel="stylesheet" type="text/css" href="/styles/code-block.css">
+  <link rel="stylesheet" type="text/css" href="../styles/styles.css">
+</head>
+<body>
+
+<div class=content-container>
+  <script src="/top-bar/top-bar-script.js"></script>
+
+  <h1>Collision Detection in Bevy using Rapier</h1>
+  <time id="blog-date" datetime="2023-11-18">DATE</time>
+
+  <p>
+    Pretty much every game needs collisions in some way.
+    In this post I will show you how you can implement
+    2D collision detections in Bevy using the
+    <a href="https://github.com/dimforge/bevy_rapier">Rapier2D crate</a>.
+    I will focus on detection and intersections only,
+    meaning no physics based collisions.
+  </p>
+
+  <h2>Intro: What is Rapier, How to Define Colliders</h2>
+
+  <p>
+    Given that Bevy doesn't ship with a physics engine out of the box,
+    we will have to resort to other sources. The Rapier crate mentioned above
+    is a great fit. The description on <a href="https://rapier.rs/docs/">their page</a>
+    is as follows
+  </p>
+
+  <blockquote cite="https://rapier.rs/docs/">
+    <em>
+      Rapier is a set of 2D and 3D physics engines written using the
+      Rust programming language. It targets applications requiring
+      real-time physics like video games, animation, and robotics.
+      It is designed to be fast, stable, and optionally cross-platform deterministic.
+    </em>
+  </blockquote>
+
+  <p>
+    Pretty good! It has pretty much all the features you would need in a physics game engine.
+    I am going to focus on 2D Collision detection here
+    (intersions of colliders), as opposed to doing physics
+    based collisions with rigidbodies.
+  </p>
+
+  <h3>Colliders</h3>
+
+  <p>
+    Let's start by understanding how we can define a very simple collider
+    in rapier/bevy. Firstly, we can use the
+    <a href="https://docs.rs/bevy_rapier2d/latest/bevy_rapier2d/">bevy_rapier2d</a>.
+    crate which defines bindings to the bevy engine for us.
+    Using this, we can create our first Collider Component.
+  </p>
+
+  <pre>
+use bevy_rapier2d::prelude::*;
+
+commands.spawn(
+    Collider::cuboid(2.0, 4.0);
+)
+  </pre>
+
+  <p>
+    This will add the <code>Collider</code> component to
+    the entity and is all we need in order to specify the collision
+    shape. It defines the geometric shape of our entity and allows
+    it to interact with the world if attached to a <code>Rigidbody</code>,
+    which we will <em>not</em> be doing in this tutorial.
+    Check out the <a href="https://rapier.rs/docs/user_guides/bevy_plugin/colliders#shapes">the docs</a>
+    for a full list of all shapes.
+  </p>
+
+  <h2>Collider Intersections in Rapier</h2>
+
+  <p>
+    Rapier provides the function
+    <a href="https://rapier.rs/docs/user_guides/bevy_plugin/scene_queries/#intersection-test">intersections_with_shape</a>,
+    which we can use to get information about all the shapes a provided collider intersects with.
+    Note that this will include <strong>all</strong> colliders,
+    meaning also the collider itself.
+  </p>
+
+  <pre>
+fn test_intersections(rapier_context: Res<RapierContext>) {
+    let shape = Collider::cuboid(1.0, 2.0);
+    let shape_pos = Vec2::new(0.0, 1.0);
+    let shape_rot = 0.8;
+    let filter = QueryFilter::default();
+
+    rapier_context.intersections_with_shape(
+        &shape_pos, &shape_rot, &shape, filter, |entity| {
+        println!("The entity {:?} intersects our shape.", entity);
+        // Continue searching intersections with other shapes,
+        // false to stop after the first hit
+        true 
+    });
+}
+  </pre>
+
+  <p>
+    This will print all the entities our shape is colliding with,
+    even itself! So if you only have a single collider in your scene
+    it would still print something (as it intersects itself).
+    To prevent this, we can make use of the <code>QueryFilter</code>.
+  </p>
+
+  <pre>
+let filter = QueryFilter {
+    exclude_collider: Some(entity),
+    ..default()
+};
+  </pre>
+
+  <p>
+    Where <code>entity</code> is the <code>Entity</code> that our <code>Collider</code>
+    is attached to. This is really all we need to get collision
+    detection working in our game. There is however one
+    feature you should be aware of before implementing this,
+    and that are the <a href="https://rapier.rs/docs/user_guides/rust/colliders/#collision-groups-and-solver-groups">CollisionGroups</a>.
+    These allow us to specify which colliders should intersect
+    with which other colliders. This is very familiar with
+    collision layers/masks of other engines like Unity or Godot.
+  </p>
+
+  <p>
+    The <code>CollisionGroups</code> takes two <code>u32</code> values,
+    the first is the <em>membership</em> and the second the <em>filter</em>.
+    You can think of them like this.
+  </p>
+
+  <blockquote cite="https://ask.godotengine.org/4010/whats-difference-between-collision-layers-collision-masks">
+    <em>
+      The membership tells us "I exist on the following layer(s)."
+      The filter tells us "I will collide with items that exist on the following layer(s)."
+    </em>
+  </blockquote>
+
+  <p>
+    Each bit that is a <code>1</code> indicates a
+    <code>true</code> value, meaning
+    it exists on this layer or will collide with this layer.
+    By default all bits are <code>1</code>. To define our own
+    <code>CollisionGroups</code>, we can use the following code.
+  </p>
+
+  <pre>
+collision_groups: CollisionGroups::new(
+    Group::from_bits(0b1000).unwrap(),
+    Group::from_bits(0b0100).unwrap(),
+)
+  </pre>
+
+  <p>
+    Here the collider with the attached <code>collision_groups</code>
+    will be exist only on the first layer and will only mask (collide)
+    with other colliders that live on the second layer.
+  </p>
+
+  <p>
+  And that's all there is to know for basic 2D collision detection
+  in bevy! If you are still a little confused or would like to
+  see this approach implemented in a demo game, check out
+  <a href="https://github.com/PraxTube/guardian-of-the-sea/commit/178ffabc05e1085e8bf0535ab3d33c387d67b9d1">this commit</a>.
+  </p>
+
+  <div style="height: 200px;"></div>
+</div>
+
+<script src="/blog/scripts/post-blog.js"></script>
+
+</body>
+</html>
