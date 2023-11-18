@@ -187,7 +187,6 @@ fn write_blog_toc(data: Vec<Data>) -> Result<(), Box<dyn std::error::Error>> {
     let mut content = String::new();
 
     for d in data {
-        println!("{:?}", d.file);
         content += &format!("<h3>{}</h3>", d.header);
         content += &format!(
             "<p class=\"blog-date\"><em>{}</em></p>",
@@ -239,7 +238,6 @@ fn write_recent_blogs(data: Vec<Data>) -> Result<(), Box<dyn std::error::Error>>
             image: d.image,
         };
 
-        println!("{:?}", d.file);
         content += &format!("<h3>{}</h3>", d.header);
         content += &format!(
             "<p class=\"blog-date\"><em>{}</em></p>",
@@ -287,5 +285,5 @@ fn format_datetime(input_date: &str) -> String {
         }
     };
 
-    date.format("%B%e, %Y").to_string()
+    date.format("%B %-d, %Y").to_string()
 }
