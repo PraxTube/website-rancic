@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-  <title>Making a Game in Bevy</title>
+  <title>Making my First Video Game</title>
   <link rel="stylesheet" type="text/css" href="/styles/styles.css">
   <link rel="stylesheet" type="text/css" href="/styles/code-block.css">
   <link rel="stylesheet" type="text/css" href="../styles/styles.css">
@@ -11,17 +11,17 @@
 <div class=content-container>
   <script src="/top-bar/top-bar-script.js"></script>
 
-  <h1>Making a Game in Bevy</h1>
+  <h1>Making my First Video Game</h1>
   <time id="blog-date" datetime="2023-11-06">DATE</time>
 
   <img src="/aoth/images/rocket-kill.gif">
 
   <p>
-    STILL WIP,
     I created an online multiplayer action game in 6 weeks.
     During this time, I learned a tone about how to make a game
     and get it done. In this blog post I summarize my
-    experience of the development of Ace of the Heavens.
+    experience of the development of
+    <a href="https://praxtube.itch.io/ace-of-the-heavens">Ace of the Heavens</a>.
   </p>
 
   <h2>Introduction</h2>
@@ -39,56 +39,71 @@
     So it took me 5 years to really publish my first ever game.
     There were many failed attempts and I think there are a lot of
     reasons why I was able to push through with this game and not with
-    the ones before. In the following sections, I will do my best
-    at explaining what I did and provide you with actionable steps
-    you can take to improve you game development journy.
+    the ones before.
   </p>
 
   <h2>Define a Deadline</h2>
 
   <p>
     I believe that one of the reasons I managed to pull through with this project
-    was because I had a very clear deadline. I had exactly 150 days to achieve something
-    of value in game development for a few reasons that I won't get into here as they don't
-    matter, the point is that I <strong>had</strong> to finish the project.
+    was because I had a very clear deadline. I had exactly 150 days to create a
+    game that is actually playable. I won't go into the details as to <em>why</em>
+    I had precicely 150 days, the important part here is that I had a concrete
+    (and also somewhat short) deadline.
   </p>
   <p>
     Having a clear deadline and being aware that there is no time to lose kept my momentum
-    up and I was focused on developing the features that would be actually useful for the game.
-    It also kept me away from wasting my time on <a href="https://en.wiktionary.org/wiki/yak_shaving">yak shaving</a>.
-    This was key in developing an MPV as fast as possible. I also forced me to have a very clear
-    vision of the game in mind at all times, which made it possible for me to cut many corners
-    and create the architecture of the project for the exact scope I wanted the game to be.
+    up. It forced me to develop only the features absolutely necessary for the base game and
+    allowed me to avoid <a href="https://en.wikipedia.org/wiki/Feature_creep">feature creeping</a>.
+    In the same manner, I also kept myself from wasting time on
+    <a href="https://en.wiktionary.org/wiki/yak_shaving">yak shaving</a>.
+    This was key in developing an MVP (Minimal Viable Product)
+    as fast as possible.
   </p>
 
   <h2>Have a Clear Vision</h2>
 
   <p>
-    As mentioned earlier, I knew very well what kind of game I was going to create.
-    This was crucial, as it allowed me to write code much simpler code
-    which most would consider a bad practice because it is rigid and non extendible.
-    However it there are two reasons this is a good idea for a beginner:
+    I knew exactly what kind of game I was going to create,
+    there was always clear vision in my mind.
+    This was crucial, as it allowed me to cut many corners and use
+    extremely simple (and non extensible) architectures.
+    Some parts of my code base are quite inflexible and would be considered
+    "bad practices" by many.
+    However, there are two reasons I believe this is a good approach for a beginner:
       <ol>
         <li>You won't need the extensible code anyways if you don't even get out of prototype stage.</li>
-        <li>If you know your game's scope, you will be able to cut corners and write simpler systems.</li>
+        <li>
+          If you know your game's scope, you will be able to cut corners
+          and write simpler systems without doing a lot of work twice.
+        </li>
       </ol>
   </p>
   <p>
-    Keeping the scope small is probably the most common advise for new game devs,
+    <em>"Keep the scope small"</em> is probably the most common advise for new game devs,
     but it's for a good reason. If you plan to create a huge game that you know
     would take years to complete then your code base must be very maintainable.
     If it isn't, you are likely going to lose interest at some point because
-    it's just too hard to add new features, features you didn't account for
-    when writing the code.
+    it's simply too hard to add new features, features you didn't account for
+    when writing the code initially.
+  </p>
+
+  <p>
+    You always have the option to restructure your code base once you have reached
+    the goal you had in mind for the game.
+    Granted, it would be a lot more work at this point,
+    but if you spend too much time doing premature optimization (in terms of architecture),
+    then you might never even reach your first goal!
   </p>
 
   <h2>Always Know Your Next Step</h2>
 
   <p>
-    Everyday, once I finish my work day, I open a file where I store
-    all my current tasks and update it (add new ones and delete completed ones).
-    Afterwards I think for a moment about my <strong>next</strong> tasks for a
-    given project. The next time I am ready to start work I just take a look
+    Everyday, once I finish my work day, I open a file where I write and store
+    all of my current tasks and update them (add new ones and delete completed ones).
+    Afterwards, I take a moment to think about my next steps for a
+    given project. The next time I am ready to start work
+    (usually the next morning) I just take a look
     at this file and know exactly what I need to work on.
   </p>
 
@@ -99,24 +114,48 @@ Ace of the Heavens
   </pre>
    
   <p>
-    Note that I am not telling you to plan every single little tasks for
-    the next 3 years. Your next one or two steps are enough (so the next
+    Note that I am not telling you to plan every single little task for
+    the next 3 years. The next one or two steps are enough (so the next
     30min - 3h should be planned). I don't believe there is a lot of value
     in over planning or other forms of meta knowledge. In my personal
     experience it usually only resulted in a waste of time. One or two
-    steps is all you need (at first).
+    steps are all you need (at first).
+    This approach is heavily inspired by the book Deep Work,
+    which I can only recommend you to read.
   </p>
 
   <h2>Restructure Restructure Restructure</h2>
 
   <p>
     I cannot tell you how important it is to restructure your game over and over
-    if you want to to live for more then just a few weeks. Even if you know exactly
+    if you want it to live for more then just a few weeks. Even if you know exactly
     how your game will look in the end, it's still important to regularly restructure
-    your code-base as you learn more and more techniques and general best practices.
-    Also keeping files small is very important for me, my motivation to work in a file
+    your code base as you learn more and more techniques and general best practices.
+    Also, keeping files small is very important for me, my motivation to work in a file
     that is larger then 300 lines drops exponentially fast. As game development is an
     inherently stateful process, keeping your files small and concise is very important.
+  </p>
+
+  <p>
+    I build the habit to restructure one part of code for every new feature I add to the game.
+    This allows me to make steady progress without building on a shaky foundation.
+    To be honest, restructuring code in Bevy (Rust) is actually surprisingly fun.
+    Whenever I start to restructure code I quickly start to think of possible ways to
+    reduce code and code complexity, which sparks extreme joy in me.
+    I don't know if that's a me thing, but the fact that Rust is such an amazing
+    language really helps with this.
+  </p>
+
+  <p>
+    The whole notion of regularly restructuring your code base
+    may seem contradicting to what I stated earlier,
+    but it's not. Code must <strong>always</strong> be restructured.
+    Entropy always increases in a given system, unless energy
+    is spend to counteract it. I am stating here that this also
+    applies to code, which is just information.
+    The whole topic deserves it's own blog, so I won't go into depth here,
+    but the point is that there is value in restructuring.
+    One just has to be aware of the diminishing returns.
   </p>
 
   <h2>Use Assets From Others Whenever Possible</h2>
@@ -131,11 +170,11 @@ Ace of the Heavens
     to speed up the process of the development.
   </p>
 
-  <h2>Playtest often, playtest extremes</h2>
+  <h2>Playtest Often and Playtest Extremes</h2>
 
   <p>
     This is another very common advise, but it's extremely important.
-    Playtest. Often. Also let other people playtest your game
+    Playtest. Often. Also, let other people playtest your game
     (once you are out of the prototype stage, don't let them play
     a super broken game). I advise you to playtest your game
     not only often, but also to push your game to extremes.
@@ -154,17 +193,99 @@ Ace of the Heavens
       Your player character moves? Go crazy with the speed.
     </li>
     <li>
-
+      Have a few enemies in your game? Add 10x the amount you have right now.
     </li>
   </ul>
 
+  <p>
+    Games are about evoking specific emotions in the player,
+    going to extremes with your game parameters can
+    evoke these emotions faster and more effectively.
+    Of course, you can take it too far as well,
+    however, the goal here is to experiment and learn from the results.
+    Besides, because all you do is set some numbers it's very low
+    effort for potentially high reward.
+  </p>
+
+  <p>
+    You will also make realizations about your game design.
+    For example, when I was developing
+    Ace of the Heavens, I set the shooting cooldown to zero.
+    The result was 60 bullets flying out of the players barrel
+    each second and I realized that controling a vehicle that shoots
+    as fast as ten gatling guns is quite fun.
+    This led me to prototype a whole game were the player
+    builds and continuously upgrades some kind of ship with turrets
+    and just demolishes everything in his path.
+    Just by changing on little variable.
+  </p>
+
   <h2>Add the JUICE</h2>
 
-  <h2>As Simple as Possible but not Simpler</h2>
+  <p>
+    Once you have a basic gameplay loop that is fun,
+    you should add <a href="https://en.wikipedia.org/wiki/Game_feel">game juice</a> ASAP.
+    It doesn't matter if there are still some issues with the UI,
+    or that the enemy AI still has some minor bugs, make the game <em>feel</em> good
+    as soon as you possibly can, which usually is once you created a basic
+    gameplay loop. Your game will feel vastly different if you add
+    some juice to it, just watch
+    <a href="https://www.youtube.com/watch?v=Fy0aCDmgnxg">Juice it or lose it</a>
+    and
+    <a href="https://www.youtube.com/watch?v=AJdEqssNZ-U">The art of screenshake</a>
+    and you will understand what I mean.
+  </p>
 
   <h2>Stop Head Bashing</h2>
 
-  <h2>The right Mindset</h2>
+  <p>
+    You will encounter bugs. Many of them. Sometimes it will feel like
+    nothing is working and that it's best to just throw the project
+    in a trash bin and move on. But you must persist. The key to
+    creating games is persistency, and the key to fixing bugs is
+    to take it slowly. When you can't solve an issue, simply take
+    a break. Go for a walk, read a book, exercise, eat something,
+    just take a break from the issue that seems unsolvable.
+    Your mind is going to try to solve the issue without you needing
+    to write a single line of code.
+  </p>
+
+  <p>
+    I have had more then enough instances were I did exactly that.
+    There was some kind of bug or issue I coudn't solve even after
+    trying for <em>hours</em>. Eventually, after going for a walk,
+    the solution presented itself. Same thing with bug hunting.
+    Sometimes you spend ungodly amounts of time just trying to figure out
+    <em>where</em> the issue is without any success.
+    Then, after taking some time off and returning to it,
+    you spot the issue in less then a minute. Changing your perspective is
+    much more powerful then trying to head bash your way through a problem.
+    This applies to all kinds of knowledge work of course.
+  </p>
+
+  <h2>The Right Mindset</h2>
+
+  <p>
+    Finally, one of the biggest reasons I was able to finish this
+    project was because I had a major change in my mindset.
+    I made the realization that life is short and that
+    if I want to make games, I have to start <strong>now</strong>.
+    Around the same time I also got a little bit into
+    <a href="https://en.wikipedia.org/wiki/Stoicism">stoicism</a>,
+    which helped me push through with the game at times
+    when it seemed borderline impossible to finish it.
+    The right mindset will automatically cultivate the right
+    habits and vice versa.
+  </p>
+
+  <p>
+    That's it! My major learnings from the development of
+    Ace of the Heavens. I hope you found something in here useful,
+    I will most likely revisit this every once in a while to check
+    if these lessons are holding up to time.
+    And remember, when things don't go your way,
+    <em>Slow and Steady wins it all</em>.
+  </p>
 
   <div style="height: 200px;"></div>
 </div>
