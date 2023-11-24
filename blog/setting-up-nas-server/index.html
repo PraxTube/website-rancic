@@ -27,7 +27,8 @@
     In order to run our own NAS server we obviously first need a server.
     Go ahead and install the an ubuntu server on a free device.
     The <a href="https://ubuntu.com/tutorials/install-ubuntu-server#1-overview">ubuntu install instructions</a>
-    are very simple, you should be able to follow them and have a running server in less then an hour. I suggest using the non GUI server, at least that's what I assuming
+    are very simple, you should be able to follow them and have a running server in less then an hour.
+    I suggest using the non GUI server, at least that's what I am assuming
     you will have in this tutorial. It does work with the desktop
     server as well though.
   </p>
@@ -44,7 +45,7 @@ sudo apt install nala
   </pre>
 
   <p>
-    Once that is done, we call use <code>nala</code>
+    Once that is done, we call <code>nala</code>
     instead of <code>apt</code> to install packages.
     Let's go ahead and use it to install a text editor.
   </p>
@@ -56,9 +57,9 @@ sudo nala install vim
   <p>
     You should see a much cleaner visual for the installing process.
     While it would be totally fine to use <code>apt</code>,
-    you benifit from using <code>nala</code> as it not only looks
-    a lot better and is more readable, it also has quite a few
-    features.
+    you benefit from using <code>nala</code> as it not only looks
+    a lot better and is more readable, but it also has quite a few
+    features (like undoing installs and properly purging packages).
   <p>
 
   <h2>Setting a Static IP Address</h2>
@@ -71,14 +72,14 @@ sudo nala install vim
     which your internet router uses to know which data package
     needs to go where. These private IP addresses can change
     when you for example change your router. This is not a problem
-    for in most cases, but when using a NAS server we will
+    for most cases, but when using a NAS server we will
     access our server through the private IP address.
     So we are going to need to make the private IP address static.
   </p>
 
   <p>
-    First of all we will need to figure out what IP addresses our
-    server has. We do this by simply running the following command.
+    First of all we will need to figure out the private IP address of our server.
+    We do this by simply running the following command.
   </p>
 
   <pre>
@@ -86,7 +87,7 @@ ip addr | grep inet
   </pre>
 
   <p>
-    This should output something similar to this output.
+    This should output something similar to this.
   </p>
 
   <pre>
@@ -99,7 +100,7 @@ inet6 fe80::226a:8aff:fe28:7bce/64 scope link
 
   <p>
     My server has a private IP address of
-    <code>192.168.178.98</code>. Your will be different
+    <code>192.168.178.98</code>. Yours will be different
     but will probably also start with something like
     <code>192.168</code>.
   </p>
@@ -153,9 +154,9 @@ network:
   </pre>
 
   <p>
-    Here you obviously need to replace the private IP address with your own.
+    Here you obviously need to replace the private IP address and the network interface with your own.
     Note that <code>8.8.8.8</code> is a public google domain used as a fallback.
-    The only thing left to do is run this command we can finally move on.
+    The only thing left to do is to update the netplan.
   </p>
 
   <pre>
@@ -187,11 +188,11 @@ smbd.service - Samba SMB Daemon
     Running this command should show you that samba is now active.
     I cut out the rest of it as it's not important, but if nala is inactive
     or there were some errors then you should check the rest of the output.
-    You may need to reboot your server, nala will have told you if you need.
+    You may need to reboot your server, nala will tell you in that case.
   </p>
 
   <p>
-    Once you made sure samba is running, we are going to configure it.
+    Once you made sure samba is running we are going to configure it.
     Open the file <code>/etc/samba/smb.conf</code> with the editor of
     your choice (I am gonna use vim which we installed previously).
   </p>
@@ -232,9 +233,9 @@ sudo vim /etc/samba/smb.conf
   <p>
     You can configure as many entries as you want.
     Let's say you would like to create another entry just for movies,
-    then you could add the following to you <code>smb.conf</code>.
+    then you could add the following to your <code>smb.conf</code>.
     Note that the mask <code>0777</code> means that everybody
-    access to the server has read and write access.
+    that has access to the server has read and write access.
   </p>
 
   <pre>
@@ -265,7 +266,7 @@ sudo useradd my-new-user
   <p>
     Then we will add the user to samba.
     It will prompt you to create a password
-    for this user. Note that the person you is going to use this
+    for this user. Note that the person who is going to use this account
     on their desktop OS will need this password in order to connect
     to the NAS server.
   </p>
@@ -285,7 +286,7 @@ sudo systemctl restart smbd
   </pre>
 
   <p>
-    That is it! Your NAS server is all set up now.
+    That's it! Your NAS server is all set up now.
     The only thing left to do is to connect to it from your desktop OS.
     I created a separate tutorial for that as this one is already
     quite long, you can

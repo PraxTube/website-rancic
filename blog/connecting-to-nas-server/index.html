@@ -23,8 +23,8 @@
   <h2>Connecting from Windows</h2>
 
   <p>
-    On windows, if you want to connect to a NAS server and have it
-    accessable as a native folder, follow
+    On windows, if you want to connect to a NAS server through
+    the file explorer, follow
     <a href="https://kb.synology.com/en-global/DSM/help/DSM/Tutorial/store_with_windows?version=6">this tutorial</a>.
     Note that the folder you need to specify has the following structure.
   </p>
@@ -35,7 +35,7 @@
 
   <p>
     If you followed the tutorial on
-    <a href="/blog/setting-up-nas-server">how to set up a nas server</a>,
+    <a href="/blog/setting-up-nas-server">how to set up a nas server</a>
     then you will have noticed that the IP address is the private
     IP address of our NAS server and the directory name is the
     name we specified in the <code>smb.conf</code>.
@@ -44,7 +44,7 @@
 
   <p>
     Note that you must have your network as a <em>private network</em>.
-    Otherwise you will not be able to even discover you local NAS server.
+    Otherwise you won't even be able to discover your local NAS server.
     More on this <a href="https://support.microsoft.com/en-us/windows/make-a-wi-fi-network-public-or-private-in-windows-0460117d-8d3e-a7ac-f003-7a0da607448d#:~:text=Select%20Start%20%2C%20then%20type%20settings,Public%20(Recommended)%20or%20Private.">here</a>.
 
   <h2>Connecting from MacOS</h2>
@@ -61,7 +61,7 @@ smb://192.168.178.98/first-nas-folder
 
   <p>
     If you followed the tutorial on
-    <a href="/blog/setting-up-nas-server">how to set up a nas server</a>,
+    <a href="/blog/setting-up-nas-server">how to set up a nas server</a>
     then you will have noticed that the IP address is the private
     IP address of our NAS server and the directory name is the
     name we specified in the <code>smb.conf</code>.
@@ -72,14 +72,14 @@ smb://192.168.178.98/first-nas-folder
 
   <p>
     Connecting to your NAS server from Linux can be a little bit more tricky.
-    If you want to use the a file explorer then it highly depends on the
+    If you want to use the file explorer then it highly depends on the
     desktop environment you are using. It <em>should</em> be similar to
     the Windows file explorer, but again, as there are so many desktop
     environments and even more file explorers it can vary quite heavily.
-    I am going to show you an approach using the terminal in the following
-    sections. This will work on <strong>every</strong> linux distro,
-    regardless of desktop environment. It will even work if you don't
-    have any desktop environment at all!
+    I am going to show you an approach using the terminal.
+    This will work on <strong>every</strong> linux distro,
+    regardless of the desktop environment. It will even work if you don't
+    have any desktop environment at all (on headless systems)!
   </p>
 
   <h3>Creating SSH Short Handle</h3>
@@ -104,10 +104,10 @@ Host server-name
     <a href="/blog/setting-up-nas-server">how to set up a nas server</a>.
   </p>
 
-  <h3>Connecting to NAS server</h3>
+  <h3>Connecting to the NAS server</h3>
 
   <p>
-    Before we can actually set up the connection to the NAS server, we first
+    Before we can actually set up the connection to the NAS server we first
     need to create a directory where the content of the NAS server should go into.
     We will also need to create a credentials file for fstab to use on boot.
   </p>
