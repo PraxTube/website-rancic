@@ -15,19 +15,19 @@
   <time id="blog-date" datetime="2023-11-18">DATE</time>
 
   <p>
-    Pretty much every game needs collisions in some way.
-    In this post I will show you how you can implement
+    Pretty much every game needs collisions at some point.
+    In this tutorial I will show you how you can implement
     2D collision detections in Bevy using the
     <a href="https://github.com/dimforge/bevy_rapier">Rapier2D crate</a>.
-    I will focus on detection and intersections only,
-    meaning no physics based collisions.
+    I will focus on detection and intersections,
+    rather then physics based collisions with rigidbodies.
   </p>
 
   <h2>Intro: What is Rapier, How to Define Colliders</h2>
 
   <p>
-    Given that Bevy doesn't ship with a physics engine out of the box,
-    we will have to resort to other sources. The Rapier crate mentioned above
+    Given that Bevy doesn't ship with a physics engine
+    we will have to choose one for ourselves. The Rapier crate mentioned above
     is a great fit. The description on <a href="https://rapier.rs/docs/">their page</a>
     is as follows
   </p>
@@ -42,7 +42,7 @@
   </blockquote>
 
   <p>
-    Pretty good! It has pretty much all the features you would need in a physics game engine.
+    Pretty good! It has all the features you would need in a physics game engine.
     I am going to focus on 2D Collision detection here
     (intersions of colliders), as opposed to doing physics
     based collisions with rigidbodies.
@@ -52,15 +52,27 @@
 
   <p>
     Let's start by understanding how we can define a very simple collider
-    in rapier/bevy. Firstly, we can use the
-    <a href="https://docs.rs/bevy_rapier2d/latest/bevy_rapier2d/">bevy_rapier2d</a>.
+    in rapier/bevy. Firstly, we use
+    <a href="https://docs.rs/bevy_rapier2d/latest/bevy_rapier2d/">bevy_rapier2d</a>
     crate which defines bindings to the bevy engine for us.
-    Using this, we can create our first Collider Component.
+    Add the following to your app.
   </p>
 
   <pre>
 use bevy_rapier2d::prelude::*;
 
+app.add_plugins((
+    RapierPhysicsPlugin::<NoUserData>::default(),
+    RapierDebugRenderPlugin::default(),
+))
+  </pre>
+
+  <p>
+    Using this, we can create our first Collider Component.
+    You can add it on any entity you like as it is a Component.
+  </p>
+
+  <pre>
 commands.spawn(
     Collider::cuboid(2.0, 4.0);
 )
@@ -80,7 +92,7 @@ commands.spawn(
 
   <p>
     Rapier provides the function
-    <a href="https://rapier.rs/docs/user_guides/bevy_plugin/scene_queries/#intersection-test">intersections_with_shape</a>,
+    <a href="https://rapier.rs/docs/user_guides/bevy_plugin/scene_queries/#intersection-test"><code>intersections_with_shape</code></a>,
     which we can use to get information about all the shapes a provided collider intersects with.
     Note that this will include <strong>all</strong> colliders,
     meaning also the collider itself.
@@ -122,9 +134,9 @@ let filter = QueryFilter {
     is attached to. This is really all we need to get collision
     detection working in our game. There is however one
     feature you should be aware of before implementing this,
-    and that are the <a href="https://rapier.rs/docs/user_guides/rust/colliders/#collision-groups-and-solver-groups">CollisionGroups</a>.
+    and that is the <a href="https://rapier.rs/docs/user_guides/rust/colliders/#collision-groups-and-solver-groups">CollisionGroups</a>.
     These allow us to specify which colliders should intersect
-    with which other colliders. This is very familiar with
+    with which other colliders. This is very similar to
     collision layers/masks of other engines like Unity or Godot.
   </p>
 
@@ -145,8 +157,8 @@ let filter = QueryFilter {
     Each bit that is a <code>1</code> indicates a
     <code>true</code> value, meaning
     it exists on this layer or will collide with this layer.
-    By default all bits are <code>1</code>. To define our own
-    <code>CollisionGroups</code>, we can use the following code.
+    By default, all bits are <code>1</code>. To define our own
+    <code>CollisionGroups</code> we can use the following code.
   </p>
 
   <pre>
@@ -158,8 +170,13 @@ collision_groups: CollisionGroups::new(
 
   <p>
     Here the collider with the attached <code>collision_groups</code>
-    will be exist only on the first layer and will only mask (collide)
+    will exist only on the first layer and will only mask (collide)
     with other colliders that live on the second layer.
+    You could for example have the first bit represent the player
+    and the second bit represent your enemies.
+    Then to detech collision of player and enemey you simply have
+    to set the collision layer and mask appropriately and you will
+    see that they intersect eachother.
   </p>
 
   <p>
