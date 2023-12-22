@@ -184,7 +184,49 @@ collision_groups: CollisionGroups::new(
   in bevy! If you are still a little confused or would like to
   see this approach implemented in a demo game, check out
   <a href="https://github.com/PraxTube/guardian-of-the-sea/commit/178ffabc05e1085e8bf0535ab3d33c387d67b9d1">this commit</a>.
+  or following code, which is a minimal project that you can run as a standalone.
   </p>
+
+  <pre>
+use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
+
+fn main() {
+    App::new()
+        .add_plugins((
+            DefaultPlugins,
+            RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0),
+            RapierDebugRenderPlugin::default(),
+        ))
+        .add_systems(Startup, setup)
+        .add_systems(Update, test_intersections)
+        .run();
+}
+
+fn setup(mut commands: Commands) {
+    commands.spawn(Camera2dBundle::default());
+    commands.spawn((Collider::ball(50.0), TransformBundle::default()));
+}
+
+fn test_intersections(
+    rapier_context: Res<RapierContext>,
+    q_colliders: Query<(&Transform, &Collider)>,
+) {
+    let filter = QueryFilter::default();
+    for (transform, collider) in &q_colliders {
+        rapier_context.intersections_with_shape(
+            transform.translation.truncate(),
+            transform.rotation.to_euler(EulerRot::ZYX).0,
+            collider,
+            filter,
+            |entity| {
+                println!("The entity {:?} intersects our shape.", entity);
+                true // Return `false` instead if we want to stop searching for other colliders that contain this point.
+            },
+        );
+    }
+}
+  </pre>
 
   <div style="height: 200px;"></div>
 </div>
