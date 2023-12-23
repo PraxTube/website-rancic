@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <title>Magus Parvus Blog</title>
+  <link rel="stylesheet" type="text/css" href="/styles/styles.css">
+  <link rel="stylesheet" type="text/css" href="/styles/code-block.css">
+  <link rel="stylesheet" type="text/css" href="../styles/styles.css">
+</head>
+<body>
+
+<div class=content-container>
+  <script src="/top-bar/top-bar-script.js"></script>
+
+  <h1>Magus Parvus Devlog</h1>
+  <time id="blog-date" datetime="2023-12-22">DATE</time>
+
+  <img src="/blog/magus-parvus-devlog/showcase.jpg">
+
+  <p>
+    TODO: YT LINK
+
+    I made a cozy little 2D top down mage game.
+    You walk around the map, activating statues and killing
+    enemies by casting spells.
+    In this blog post, I describe my development process
+    and the challanges I faced using the Bevy game engine.
+  </p>
+
+  <h2>The Game</h2>
+
+  <p>
+    The game Magus Parvus,
+    which you can <a href="https://praxtube.itch.io/magus-parvus">play on itch</a>,
+    is a small 2D top down game where you cast spells by typing them out.
+    It's fairly short, but that's kind of the point.
+    I wanted to make a very small and compact game that would teach me
+    the basics of how to create a 2D top down game.
+  </p>
+
+  <p>
+    In this post I will focus on the technical implementation
+    and some challanges that I see that need to be addressed to make
+    the development process of this kind of game more feasible.
+    To get a broader understanding of the game, check out
+    <a href="TODO INSERT YT LINK">my youtube video</a>.
+  </p>
+
+  <h2>Implementation in Bevy</h2>
+
+  <p>
+    The game is made in <code>bevy 0.12.1</code> and uses
+    the following third party crates.
+  </p>
+
+  <ul>
+    <li>
+      <code>bevy_rapier2d</code> - Physics and Collisions
+    </li>
+    <li>
+      <code>bevy_ecs_ldtk</code> - Map Loading
+    </li>
+    <li>
+      <code>bevy_kira_audio</code> - Music and Sounds
+    </li>
+    <li>
+      <code>bevy_asset_loader</code> - Loading assets
+    </li>
+    <li>
+      <code>bevy_trickfilm</code> - 2D Sprite Animations
+    </li>
+    <li>
+      <code>bevy_screen_diagnostics</code> - Debugging Diagnostics
+    </li>
+    <li>
+      <code>noisy_bevy</code> - Noise Map (for camera shake)
+    </li>
+  </ul>
+
+  <p>
+  The main challange here was to get dynamic chunkloading to work
+  with the <code>bevy_ecs_ldtk</code> package.
+  Implementing physics and collisions with <code>bevy_rapier2d</code>
+  was also a little tedious, but this is mostly because their documentation
+  is somewhat broken (quite a lot of outdated href links).
+  Apart from that, most of the development was concerned with implementing
+  the actual features of the game.
+  </p>
+
+  <h2>Development Process</h2>
+
+  <h3>Map Creation with LDtk</h3>
+
+  There weren't any examples or blogs about it (at least none that I could find),
+  but luckily the maintainer of the crate is really friendly.
+  I <a href="https://github.com/Trouv/bevy_ecs_ldtk/issues/268">opened an issue</a>
+  and he was quick to guide me on how to implement it.
+  Turns out, there actually IS an example on how to do this,
+  I of course somehow managed to miss that.
+
+  So following the example on how to load and delete level sections,
+  I got a basic chunkloading system in place.
+  This is actually a bit overkill for this project, but it's going to be
+  very useful for future games.
+
+  <h3>Physics and Collisions</h3>
+
+  <h3>Sprite Animations</h3>
+
+  <h3>UI</h3>
+
+  <h2>Future Plans</h2>
+
+  <div style="height: 200px;"></div>
+</div>
+
+<script src="/blog/scripts/post-blog.js"></script>
+
+</body>
+</html>
