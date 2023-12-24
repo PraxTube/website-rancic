@@ -12,13 +12,11 @@
   <script src="/top-bar/top-bar-script.js"></script>
 
   <h1>Magus Parvus Devlog</h1>
-  <time id="blog-date" datetime="2023-12-22">DATE</time>
+  <time id="blog-date" datetime="2024-01-03">DATE</time>
 
   <img src="/blog/magus-parvus-devlog/showcase.jpg">
 
   <p>
-    TODO: YT LINK
-
     I made a cozy little 2D top down mage game.
     You walk around the map, activating statues and killing
     enemies by casting spells.
@@ -41,8 +39,11 @@
     In this post I will focus on the technical implementation
     and some challanges that I see that need to be addressed to make
     the development process of this kind of game more feasible.
-    To get a broader understanding of the game, check out
-    <a href="TODO INSERT YT LINK">my youtube video</a>.
+    The whole game is
+    <a href="https://github.com/PraxTube/magus-parvus">open source</a>,
+    so feel free to look around, fork the project or open a PR.
+    <!-- To get a broader understanding of the game, check out -->
+    <!-- <a href="https://youtu.be/YHCbuCA6nCI">my youtube video</a>. -->
   </p>
 
   <h2>Implementation in Bevy</h2>
@@ -94,7 +95,7 @@
   and I had to figure them out along the way.
   That being said, I feel like I was able to make
   progress rather quickly, which I contribute to the fact that
-  the workflow of the Bevy engine is just superiour to that
+  the workflow of the Bevy simply works better for me then that
   of engines like Unity and Godot.
   </p>
 
@@ -119,10 +120,12 @@
   I of course somehow managed to miss that.
   </p>
 
-  <video width="640" height="360" controls>
-    <source src="/blog/magus-parvus-devlog/chunk-loading.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  <div class="video-container">
+    <video width="560" height="315" controls>
+      <source src="/blog/magus-parvus-devlog/chunk-loading.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
   <p>
   So following the example on how to load and delete level sections,
@@ -134,7 +137,7 @@
   <h3>Physics and Collisions</h3>
 
   <p>
-  While I don't want any amazing physics in my game,
+  While I don't need any fancy physics in my game,
   I do need collisions and basic linear velocity.
   <a href="https://github.com/dimforge/bevy_rapier"><code>bevy_rapier2d</code></a>
   is perfect for this.
@@ -160,19 +163,21 @@
   Both of the above problems deal with the backend, which you write once
   and pretty much leave alone for the rest of the project.
   Animations on the other hand are much more problematic.
-  There more content you will add to your game, the more
+  The more content you add to your game, the more
   your workflow of adding the content matters.
-  Physics and chunkloading are independant of the content size,
-  they work the same if you only have 1 enemy or 100.
+  Physics and chunkloading are independent of the content size,
+  they work the same if you have 1 or 100 different enemies.
   However, if your workflow of adding animations is by hardcoding
-  the sprite indices then you will have a terrible time managing
-  this mess for even 10 enemies, let alone 100.
+  sprite indices into your source doe,
+  then you will have a terrible time managing
+  this mess for even 10 types of enemies, let alone 100.
   </p>
 
   <p>
   This is one of my major problems with Unity and Godot,
   their animation tools are really tedious to use
-  (mainly because you must use the mouse, which I find super frustrating).
+  (mainly because you must use the mouse, which tends to store
+  relevant information in meta files. This works horrible with verison control).
   Bevy's built in solution is: ... Well it doesn't have one of course.
   I found the <a href="https://github.com/KirmesBude/bevy_trickfilm"><code>bevy_trickfilm</code></a>
   crate to be quite intuitive, the API feels similar to that of Godot,
@@ -180,7 +185,7 @@
   which means I don't have to use the mouse to create animations.
   The crate still needs quite a bit of work though, but that's to be expected.
   With some more work on the crate it should be much simpler to use
-  sprite sheet animations in the future.
+  sprite animations in the future.
   </p>
 
   <h3>UI</h3>
@@ -189,26 +194,27 @@
   The game also has UI, which is kept to a minimum as
   I already know that UI is one of the worst parts of game development.
   Despite it looks, the UI for the spell book took my a dozen hours or so to implement.
-  It's fairly clean now actually, after many refactors,
-  but keeping the UI to a minimum is super important.
-  It also helps with keeping the game as immersive as possible,
-  as UI tends to look and feel out of place, at least if not doen right,
-  which is very hard.
+  The code for it is fairly clean now actually, after many refactors.
   </p>
 
-  <video width="640" height="360" controls>
-    <source src="/blog/magus-parvus-devlog/spell-book.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  <div class="video-container">
+    <video width="560" height="315" controls>
+      <source src="/blog/magus-parvus-devlog/spell-book.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
   <h2>Future Plans</h2>
 
   <p>
-  My long term plan is to work on more small projects like these,
+  My long term plan is to work on some more small projects like this one,
   all in the 2D top down style. The goal with each is to learn
   something new so that I can eventually work on bigger and bigger
   projects. I already have some ideas for future projects,
-  so stay tuned for those.
+  so stay tuned for those. I also plan to make all of my future
+  games open source and put them on
+  <a href="https://github.com/PraxTube">my github</a>, I will also write blogs about each of
+  them here. Till then, keep it <em>slow and steady</em>.
   </p>
 
   <div style="height: 200px;"></div>
