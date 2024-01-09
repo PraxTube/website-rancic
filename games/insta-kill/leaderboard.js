@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
       const leaderboardData = [];
 
       rows.forEach(row => {
-        const [name, score] = row.split(',').map(entry => entry.trim());
-        leaderboardData.push({ name, score: parseInt(score) });
+        const [name, score, kills, raw_time] = row.split(',').map(entry => entry.trim());
+        const time = formatTime(parseFloat(raw_time));
+        leaderboardData.push({ name, score: parseInt(score), kills, time});
       });
 
       leaderboardData.sort((a, b) => b.score - a.score);
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       leaderboardData.forEach((row, index) => {
         const newRow = document.createElement('tr');
-        newRow.innerHTML = `<td>${index + 1}</td><td>${row.name}</td><td>${row.score}</td>`;
+        newRow.innerHTML = `<td>${index + 1}</td><td>${row.name}</td><td>${row.score}</td><td>${row.kills}</td><td>${row.time}</td>`;
         leaderboardBody.appendChild(newRow);
       });
     })
@@ -25,3 +26,13 @@ document.addEventListener('DOMContentLoaded', function () {
       console.error('Error fetching leaderboard data:', error);
     });
 });
+
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  const formattedMinutes = String(minutes).padStart(2, '0');
+  const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+
+  return `${formattedMinutes}:${formattedSeconds}`;
+}
