@@ -1,0 +1,26 @@
+h1 {
+  text-align: center
+}
+
+table {
+  border-collapse: collapse;
+  width: 50%;
+  margin: auto; /* Center the table */
+}
+
+th {
+  text-align: center; /* Center the header text */
+}
+
+td {
+  text-align: center; /* Align the data below header */
+  padding: 8px;
+}
+
+/* tr:nth-child(even) { */
+/*   background-color: #f2f2f2; */
+/* } */
+
+tr:hover {
+  background-color: #dddddd;
+}
