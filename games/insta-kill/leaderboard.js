@@ -28,11 +28,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     renderLeaderboard();
   }
+  
+  console.log("hi");
 
   fetch('/games/insta-kill/leaderboard.csv')
     .then(response => response.text())
     .then(data => {
-      const rows = data.split('\n').slice(0, -1);
+      const rows = data.split(';');
+      rows.pop();
 
       leaderboardData = rows.map((row, rank) => {
         const [name, score, kills, raw_time] = row.split(',').map(entry => entry.trim());
