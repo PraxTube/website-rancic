@@ -25,3 +25,11 @@ td {
 tr:hover {
   background-color: #dddddd;
 }
+
+#leaderboard-table th.ascending::before {
+  content: '▲';
+}
+
+#leaderboard-table th.descending::before {
+  content: '▼';
+}
