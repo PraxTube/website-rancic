@@ -1,3 +1,8 @@
+:root {
+  --pcolor: #df7126;
+  --scolor: #208ed9;
+}
+
 @font-face {
   font-family: 'Daddy';
   src: url('../../fonts/Daddy.woff') format('woff');
@@ -29,8 +34,6 @@ a {
 }
 
 pcolor {
-  /* font-weight: bold; */
-  /* text-decoration: underline; */
   color: #df7126;
 }
 

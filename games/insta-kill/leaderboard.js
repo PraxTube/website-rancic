@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const leaderboardBody = document.getElementById('leaderboard-body');
     leaderboardBody.innerHTML = '';
 
-    leaderboardData.forEach((row, index) => {
+    leaderboardData.forEach(row => {
       const newRow = document.createElement('tr');
-      newRow.innerHTML = `<td>${index + 1}</td><td>${row.name}</td><td>${row.score}</td><td>${row.kills}</td><td>${row.time}</td>`;
+      newRow.innerHTML = `<td>${row.rank}</td><td>${row.name}</td><td>${row.score}</td><td>${row.kills}</td><td>${row.time}</td>`;
       leaderboardBody.appendChild(newRow);
     });
   }
@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(data => {
       const rows = data.split('\n').slice(0, -1);
 
-      leaderboardData = rows.map(row => {
+      leaderboardData = rows.map((row, rank) => {
         const [name, score, kills, raw_time] = row.split(',').map(entry => entry.trim());
         const time = formatTime(parseFloat(raw_time));
-        return { name, score: parseInt(score), kills: parseInt(kills), time };
+        return { rank: parseInt(rank + 1), name, score: parseInt(score), kills: parseInt(kills), time };
       });
 
       sortLeaderboard('score', false); // Initial sorting by score in descending order
