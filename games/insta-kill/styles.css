@@ -22,7 +22,7 @@ tbody tr:hover {
   color: var(--pcolor);
 }
 
-th:hover {
+th:not(.rank-header):hover {
   color: var(--pcolor);
 }
 

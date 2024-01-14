@@ -29,13 +29,10 @@ document.addEventListener('DOMContentLoaded', function () {
     renderLeaderboard();
   }
   
-  console.log("hi");
-
   fetch('/games/insta-kill/leaderboard.csv')
     .then(response => response.text())
     .then(data => {
-      const rows = data.split(';');
-      rows.pop();
+      const rows = data.split('\n');
 
       leaderboardData = rows.map((row, rank) => {
         const [name, score, kills, raw_time] = row.split(',').map(entry => entry.trim());
@@ -47,6 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const leaderboardHeaders = document.querySelectorAll('#leaderboard-table th');
       leaderboardHeaders.forEach(header => {
+        if (header.classList.contains('rank-header')) {
+          return;
+        }
+
         header.addEventListener('click', () => {
           const key = header.textContent.toLowerCase();
           const isDescending = header.classList.contains('descending');
