@@ -13,7 +13,8 @@
 body {
   background-color: white;
   color: black;
-  font-family: 'Daddy'
+  font-family: 'Daddy';
+  font-size: 21px;
 }
 
 a {
@@ -21,9 +22,9 @@ a {
 }
 
 .content-container {
-  max-width: 650px;
+  max-width: 50%;
   margin: 0 auto;
-  margin-top: 60px;
+  margin-top: 5%;
 }
 
 .content-container img {
