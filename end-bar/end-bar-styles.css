@@ -1,0 +1,38 @@
+.end-bar {
+  position: fixed;
+  width: 100%;
+
+  bottom: -1000px; /* Initially hide the end card */
+  left: 0;
+  right: 0;
+
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  transition: bottom 0.3s ease; /* Add transition for smooth animation */
+
+  color: #FFF;
+  background-color: #333;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-container img {
+  width: 50px;
+  margin: 20px;
+  transition: opacity transform;
+}
+
+.icon-container img:hover {
+  opacity: 0.3; /* Reduce opacity on hover */
+  transform: scale(0.9); /* Scale up the image on hover */
+}
+
+.icon-container span {
+  margin: 20px;
+  transition: opacity transform;
+}
