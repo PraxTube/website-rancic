@@ -1,0 +1,5 @@
+table {
+  border-collapse: collapse;
+  width: 50%;
+  margin: auto; /* Center the table */
+}

@@ -21,6 +21,10 @@ a {
   color: #208ed9;
 }
 
+figcaption {
+  text-align: center;
+}
+
 .content-container {
   max-width: 50%;
   margin: 0 auto;
