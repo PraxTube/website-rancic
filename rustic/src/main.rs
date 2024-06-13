@@ -6,6 +6,8 @@ use std::path::Path;
 use chrono::NaiveDate;
 use scraper::{Html, Selector};
 
+const MAX_BLOGS_TO_SHOW: usize = 3;
+
 #[derive(Clone)]
 struct Data {
     file: String,
@@ -45,7 +47,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     data.sort_by(|a, b| b.date.cmp(&a.date));
     write_blog_toc(data.clone())?;
     if data.len() > 0 {
-        write_recent_blogs(data[0..data.len().min(2)].to_vec())?;
+        write_recent_blogs(data[0..data.len().min(MAX_BLOGS_TO_SHOW)].to_vec())?;
     } else {
         println!("WARN: There are no blogs, the length is 0");
     }
