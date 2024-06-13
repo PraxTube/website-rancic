@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <title>World Generation</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="/styles/styles.css">
+  <link rel="stylesheet" type="text/css" href="/styles/code-block.css">
+  <link rel="stylesheet" type="text/css" href="../styles/styles.css">
+  <link rel="stylesheet" type="text/css" href="./styles.css">
+</head>
+<body>
+
+<div class=content-container>
+  <script src="/top-bar/top-bar-script.js"></script>
+
+  <h1>Procedural 2D World Generation</h1>
+  <time id="blog-date" datetime="2024-06-14">DATE</time>
+
+  <p>
+  Creating a procedurally generate 2D world for my next game.
+  How I went from nothing to this,
+  showing my experience with procedural world generation in incremental steps.
+  </p>
+
+  <img src="/blog/world-proc-gen/thumbnail.png">
+
+  <h2>Motivation</h2>
+
+  <p>
+  My motivation for using procedural generation in Lost Oppai was quite simple:
+  I dislike level/map design. So instead I designed an algorithm that designs maps for me :)
+  </p>
+
+  <h2>From Nothing To Something</h2>
+
+  <p>
+  The very first thing I did was to create islands (water and grass tiles only).
+  I used a simple perlin noise map to determine whether to place a water tile or a grass tile,
+  nothing fancy.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/01.png">
+
+  <p>
+  Then I got rid of those ugly placeholder tiles and used an actual tileset.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/02.png">
+
+  <p>
+  Much better, but the transition from water to grass just looks horrible.
+  Next I implemented bitmasks to determine which tile to place
+  based on the neighbhoring tile types. This isn't exactly hard,
+  but if it's your first time dealing with bitmasks
+  then it can a bit tricky.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/03.png">
+
+  <p>
+  After that I added a bit of variaty to the grass tiles by
+  just randomly selecting any valid grass tiles from the tileset.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/04.png">
+
+  <h2>Player And Collisions</h2>
+
+  <p>
+  Okay, with a map somewhat resembling an actual game now
+  I finally added the player character,
+  this is a game afterall...
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/05.png">
+
+  <p>
+  Now that a playable character is in place I had to add collision boxes.
+  This was already a bit of a pain and showed me that the system I had in
+  place was kinda ass. Determining where to place collision boxes
+  is pretty easy, you just check that for each tile the 3x3 bitmask
+  contains both grass and water (if that is the case, then we have an edge).
+  </p>
+
+  <p>
+  The real problem was debugging this.
+  I didn't create any debugging tools (even to this day).
+  Don't ask why.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/06.png">
+
+  <p>
+  I gotta say I really like how the islands look now,
+  I used two noise maps and cheaply overlay them
+  to create a slightly more interesting pattern.
+  </p>
+
+  <p>
+  I think the islands should be a bit bigger
+  as it's pretty unrealistic for islands to pop up the
+  way they do here, at least not for this size.
+  The problem with bigger islandes is that the player would rarely
+  see water and it would look a lot more monotonous when playing.
+  This is most likely a limitation of my game size.
+  In a big open world game this would be less of an issue I think.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/07.png">
+
+  <h2>Path Generation</h2>
+
+  <p>
+  Now we are getting into the more spicy generation part.
+  One thing I absolutely wanted to implement in the game was paths.
+  This doesn't sound too terribly complicated at first,
+  I mean we can already
+  generate an entire ocean afterall,
+  but implementing paths was a huge challenge.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/08.png">
+
+  <p>
+  I implemented a basic system that takes two points
+  and creates a path with a bit of a curvature using Bezier curves.
+  One big problem I faced was that I couldn't exactly
+  figure out how to generate the paths so that they are always
+  on top of grass and not just go over the ocean.
+  The issue is that I didn't have any guarantee that two points are even
+  on the same island and thus connectable.
+  To fix this I just opted to overwrite any water tile to grass tile near the paths.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/09.png">
+
+  <p>
+  I also figured I would give the path a dynamic width so that it isn't completely uniform.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/10.png">
+
+  <p>
+  Implementing the paths was already a big challenge,
+  but only now did I realize the huge downsize of a 3x3 bitmask.
+  3x3 bitmasks are pretty easy to implement and intuitive.
+  However it also means that you need <code>2^8 = 256</code>
+  different tiles to map every single possible tile combination.
+  256! The tileset I used had 16 tiles...
+  </p>
+
+  <p>
+  I remembered hearing something about 2x2 bitmasks and
+  searched a bit on how to implement those until I found
+  <a href="https://youtu.be/Uxeo9c-PX-w?t=548">this talk</a>.
+  Dualgrid is the solution.
+  Instead of each tile having 8 neighbhors,
+  we instead create a second grid and shift it by half a grid cell
+  and as a result only end up with 4 neighbhors.
+  What does that mean for the number of tiles we need?
+  Well, it's <code>2^4 = 16</code> tiles now, nice!
+  </p>
+
+  <p>
+  This does of course also have drawbacks
+  (as there are no solutions, only trades offs).
+  Firstly, this makes the backend slightly more complex.
+  This is practically not noticable.
+  But secondly, and more importantly, we aren't able to map our bitmap grid
+  that tells us if a cell is water or grass directly to the rendered grid.
+  Yes, we have the neighbhoring tiles, but it's not obvious at all how we map these two.
+  </p>
+
+  <p>
+  It took me some trial and error to implement certain things after this change
+  and it makes future features a lot harder,
+  for example the collisions don't work anymore,
+  checking the edges will lead to false positives now.
+  This means I have to rewrite the collisions
+  entirely, however it also means I have an opportunity to improve on them.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/11.png">
+
+  <p>
+  The 2x2 bitmask dual grid system is nonetheless extremely worth it.
+  Implementing paths is a bit tricky because of it, but it means that we can
+  generate any combination of tiles and don't need to worry about our algorithm
+  putting tiles next to each other that aren't covered by the tileset.
+  Having a slightly more complex backend is definitely worth it.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/12.png">
+
+  <p>
+  Next I placed the path tiles along each generated path with a given width.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/13.png">
+
+  <p>
+  I really like how the bezier curves make the connected points look much more interesting.
+  It's so simple yet so effective.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/14.png">
+
+  <p>
+  Next I experimented with terrain generation a bit.
+  I didn't exactly know how to integrate the water to the paths.
+  I thought that perhaps some ponds or similar smaller bodies of water
+  would work best here, but I would have also liked to have bigger seas.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/15.png">
+
+  <p>
+  Another edge case I have to account for:
+  The area around the spawning position of the player
+  needs to be guaranteed to be grass in order to place
+  the keyboard hints (otherwise it would look horrible).
+  </p>
+
+  <p>
+  It is these little things that make procedural world
+  generation in a video game so difficult.
+  We aren't just generating some world that should look
+  realistic, we usually want to place things into this world too.
+  These things have certain constrains that you need to make sure are met.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/16.png">
+
+  <p>
+  I wanted to have points around the spawn position of the player
+  that are all at least a certain distance away.
+  These points would be used as vertices in a graph and then
+  connected via edges using Kruskals algorithm
+  and then I could visualize the edges as paths.
+  </p>
+
+  <p>
+  Generating the points was the biggest challenge here.
+  I used the Poisson disk sampling approach to generate
+  a bunch of points which each were guaranteed to have a
+  prespecified distance from one another.
+  </p>
+
+  <p>
+  Using these points we can place our points of interest
+  there (in this case NPCs the player talks to).
+  But this could easily have been cities or anything else
+  on any kind of scale.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/17.png">
+
+  <h2>Flora And Fauna</h2>
+
+  <p>
+  I got sick of looking at this empty map
+  so decided it was time to add some flora.
+  I used the same poisson disk sampling to make
+  sure all the vegetation is at least a certain distance
+  apart from one another.
+  It's a bit more complicated in this case though,
+  as we have variable radii (the trees must be
+  further away from other trees then the bushes to other bushes etc.).
+  This algorithm doesn't work perfectly, but I am not
+  competent enough to make it work better then its current state.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/18.png">
+
+  <p>
+  Next I filled the map with grass and figured out how to integrate the bodies of water.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/19.png">
+
+  <p>
+  I noticed a nasty visual issue with the Y-Sort.
+  The shadows of the trees weren't working correctly.
+  Fixing this was a huge pain and my current solution
+  is also more of a work-around than an actual
+  fix but it works for this game.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/20.png">
+
+  <p>
+  I played a bit with the hyper-parameters of the generation process
+  and made sure the bushes could not spawn on top of the path.
+  Again, another constraint you need to make sure is
+  in place in order to properly place things.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/21.png">
+
+  <p>
+  I added patches of flowers to make the scene more interesting.
+  I really think it adds a lot. The implementation is very similar
+  to how the water is generated and was pretty straightforward.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/22.png">
+
+  <p>
+  I thought it was kind of lifeless so I added some fauna (birds in this case).
+  I actually meant for this to be a little reward for getting this far with the
+  world generation and thought this would only take around 2 hours...
+  it didn't, it took me 2 weeks :') Worth it though, the birds are awesome.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/23.png">
+
+  <p>
+  The tileset I used also had these nice (and most importantly easy to implement)
+  water sparkle animations. I generate them similarly to the
+  the patches of flowers, it adds a lot to the otherwise boring looking water.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/24.png">
+
+  <p>
+  I finished it up by adding a bit of variety to the water sparkling tiles
+  and again, little effort big reward. The water sparkles looked too uniform
+  before and look more interesting now.
+  </p>
+
+  <img src="/blog/world-proc-gen/pics/25.png">
+
+  <h2>Conclusion</h2>
+
+  <p>
+  That's all! My first attempt at procedural world generation.
+  My implementation is definitely not the prettiest
+  and it still has quite a few issues.
+  That being said, I am very pleased with the result
+  and really like the atmosphere it creates.
+  </p>
+
+  <p>
+  One thing I would definitely change next time
+  is to write propper debugging tools.
+  Just a simple visualization of the bitmap grid would have
+  been useful in so many situations.
+  </p>
+
+  <p>
+  I hope this was interesting and helpful.
+  I will most likely revisit this blog
+  the next time I try my hands on procedural world generation.
+  Until then.
+  </p>
+
+  <div style="height: 200px;"></div>
+</div>
+
+<script src="/end-bar/end-bar-script.js"></script>
+<script src="/blog/scripts/post-blog.js"></script>
+
+</body>
+</html>
