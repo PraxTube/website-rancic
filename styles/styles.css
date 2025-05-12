@@ -23,6 +23,9 @@ a {
 
 figcaption {
   text-align: center;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  width: 100%;
 }
 
 .content-container {
@@ -31,8 +34,16 @@ figcaption {
   margin-top: 60px;
 }
 
+/* This is for legacy reasons (if you don't need a caption and just use `img`) */
 .content-container img {
   max-width: 80%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.content-container figure img {
+  max-width: 100%;
   height: auto;
   display: block;
   margin: 0 auto;
