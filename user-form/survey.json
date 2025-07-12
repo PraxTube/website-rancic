@@ -1,0 +1,255 @@
+{
+    "title": "Idle Game Questionnare",
+    "description": "Answer the following questions, will be used for research purposes only.",
+    "checkErrorsMode": "onValueChanged",
+    "pages": [
+        {
+            "name": "demographic",
+            "navigationTitle": "Demographic",
+            "elements": [
+                {
+                    "type": "radiogroup",
+                    "name": "gender",
+                    "title": "Gender",
+                    "isRequired": true,
+                    "choices": [
+                        "Male",
+                        "Female",
+                        "Other"
+                    ]
+                },
+                {
+                    "type": "text",
+                    "name": "age",
+                    "title": "Age",
+                    "isRequired": true,
+                    "inputType": "number",
+                    "validators": [
+                        {
+                            "type": "numeric"
+                        }
+                    ]
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "game-hours",
+                    "title": "On Average, how many hours a *week* to you spend playing video games?",
+                    "isRequired": true,
+                    "choices": [
+                        "less than 1 hour",
+                        "between 1 and 5 hours",
+                        "between 5 and 10 hours",
+                        "between 10 and 20 hours",
+                        "more than 20 hours"
+                    ]
+                },
+                {
+                    "type": "boolean",
+                    "name": "idle-experience",
+                    "isRequired": true,
+                    "defaultValue": false,
+                    "title": "Do you have any prior experience with idle, incremental, or clicker games (e.g. Cookie Clicker, AdVenture Capitalist, Realm Grinder)?"
+                },
+                {
+                    "type": "radiogroup",
+                    "name": "game-hours",
+                    "title": "How many other idle/incremental/clicker games have you played in the past?",
+                    "visibleIf": "{idle-experience}",
+                    "choices": [
+                        "Only 1",
+                        "A few (less than 5)",
+                        "A lot (more than 5)"
+                    ]
+                },
+                {
+                    "type": "comment",
+                    "name": "idle-games",
+                    "title": "What other idle/incremental/clicker games have you played? (e.g. Cookie Clicker, AdVenture Capitalist)",
+                    "visibleIf": "{idle-experience}"
+                }
+            ]
+        },
+        {
+            "name": "experience",
+            "navigationTitle": "GEQ",
+            "elements": [
+                {
+                    "type": "text",
+                    "name": "user-uuid",
+                    "visible": false
+                },
+                {
+                    "type": "INVALID TYPE",
+                    "name": "start-time",
+                    "visible": false
+                },
+                {
+                    "type": "INVALID TYPE",
+                    "name": "end-time",
+                    "visible": false
+                },
+                {
+                    "type": "panel",
+                    "name": "usibility",
+                    "title": "Game Experience Questionnare",
+                    "description": "Please indicate how you felt while playing the game for each of the items.",
+                    "elements": [
+                        {
+                            "type": "rating",
+                            "name": "I was interested in the game's story",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I felt successful",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I felt bored",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I found it impressive",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I forgot everything around me",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I felt frustrated",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I found it tiresome",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I felt irritable",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I felt skilful",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I felt completely absorbed",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I felt content",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I felt challenged",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I had to put a lot of effort into it",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
+                            "name": "I felt good",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "contacts",
+            "navigationTitle": "Comment",
+            "elements": [
+                {
+                    "type": "text",
+                    "description": "Optional: Leave your email in case I have further questions for you.",
+                    "name": "email",
+                    "title": "Email",
+                    "inputType": "email",
+                    "validators": [
+                        {
+                            "type": "email"
+                        }
+                    ]
+                },
+                {
+                    "type": "comment",
+                    "name": "comment",
+                    "title": "Comment",
+                    "description": "Optional: Leave me a comment on whatever you feel like sharing."
+                }
+            ]
+        }
+    ],
+    "showProgressBar": true,
+    "progressBarShowPageTitles": true,
+    "progressBarShowPageNumbers": true
+}

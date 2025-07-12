@@ -1,0 +1,17 @@
+.sd-rating__min-text, .sd-rating__max-text {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: monospace; /* to help alignment */
+}
+
+.sd-rating__min-text {
+  text-align: right;
+  width: 150px;
+  margin-right: 0.5em;
+}
+
+.sd-rating__max-text {
+  text-align: left;
+  width: 150px;
+  margin-left: 0.5em;
+}
