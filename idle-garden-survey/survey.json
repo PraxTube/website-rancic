@@ -32,7 +32,7 @@
                 },
                 {
                     "type": "radiogroup",
-                    "name": "game-hours",
+                    "name": "game-hours-per-week",
                     "title": "On Average, how many hours a *week* to you spend playing video games?",
                     "isRequired": true,
                     "choices": [
@@ -45,16 +45,16 @@
                 },
                 {
                     "type": "boolean",
-                    "name": "idle-experience",
+                    "name": "prior-idle-experience",
                     "isRequired": true,
                     "defaultValue": false,
                     "title": "Do you have any prior experience with idle, incremental, or clicker games (e.g. Cookie Clicker, AdVenture Capitalist, Realm Grinder)?"
                 },
                 {
                     "type": "radiogroup",
-                    "name": "game-hours",
+                    "name": "number-of-other-idle-games-played",
                     "title": "How many other idle/incremental/clicker games have you played in the past?",
-                    "visibleIf": "{idle-experience}",
+                    "visibleIf": "{prior-idle-experience}",
                     "choices": [
                         "Only 1",
                         "A few (less than 5)",
@@ -63,9 +63,9 @@
                 },
                 {
                     "type": "comment",
-                    "name": "idle-games",
+                    "name": "other-idle-games",
                     "title": "What other idle/incremental/clicker games have you played? (e.g. Cookie Clicker, AdVenture Capitalist)",
-                    "visibleIf": "{idle-experience}"
+                    "visibleIf": "{prior-idle-experience}"
                 }
             ]
         },
