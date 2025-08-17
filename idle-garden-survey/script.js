@@ -4,23 +4,28 @@ async function loadAndSetupSurvey() {
     if (!response.ok) throw new Error("Failed to load survey.json");
     const surveyJson = await response.json();
 
-    console.log(surveyJson);
+    const params = new URLSearchParams(window.location.search);
+    const user_uuid = params.get('id') || '666';
+
+    let storedIds = JSON.parse(localStorage.getItem('user_ids')) || [];
+    if (!storedIds.includes(user_uuid)) {
+      storedIds.push(user_uuid);
+    }
+    localStorage.setItem('user_ids', JSON.stringify(storedIds));
 
     const survey = new Survey.Model(surveyJson);
-
+    survey.setValue("user-uuid", storedIds);
     survey.setValue("start-time", Math.floor(Date.now() / 1000));
     survey.onComplete.add(surveyComplete);
     survey.render(document.getElementById("surveyContainer"));
   } catch (error) {
     console.error("Error loading survey.json:", error);
   }
+
 }
 
 function surveyComplete(survey) {
-  const userId = 1;
-  survey.setValue("user-uuid", userId);
   survey.setValue("end-time", Math.floor(Date.now() / 1000));
-
   saveSurveyResults(survey.getData());
 }
 
