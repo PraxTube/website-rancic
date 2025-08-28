@@ -33,7 +33,7 @@
                 {
                     "type": "radiogroup",
                     "name": "game-hours-per-week",
-                    "title": "On Average, how many hours a *week* to you spend playing video games?",
+                    "title": "On Average, how many hours a *week* do you spend playing video games?",
                     "isRequired": true,
                     "choices": [
                         "less than 1 hour",
@@ -62,10 +62,33 @@
                     ]
                 },
                 {
-                    "type": "comment",
-                    "name": "other-idle-games",
-                    "title": "What other idle/incremental/clicker games have you played? (e.g. Cookie Clicker, AdVenture Capitalist)",
-                    "visibleIf": "{prior-idle-experience}"
+                  "type": "checkbox",
+                  "name": "other-idle-games",
+                  "visibleIf": "{prior-idle-experience}",
+                  "title": "Which other idle games have you played?",
+                  "validators": [
+                    {
+                      "type": "answercount",
+                      "text": "Please select at least one option.",
+                      "minCount": 1
+                    }
+                  ],
+                  "choices": [
+                    "Cookie Clicker",
+                    "Clicker Heroes",
+                    "Adventure Capitalist",
+                    "Egg, Inc.",
+                    "Realm Grinder",
+                    "Crusaders of the Lost Idols",
+                    "Idle Miner Tycoon",
+                    "Forager",
+                    "Tap Titans 2",
+                    "AFK Arena"
+                  ],
+                  "showNoneItem": false,
+                  "showOtherItem": true,
+                  "otherText": "Other games:",
+                  "colCount": 1
                 }
             ]
         },
