@@ -227,6 +227,15 @@
                         },
                         {
                             "type": "rating",
+                            "name": "To show that you are paying attention, please select option '3'.",
+                            "isRequired": true,
+                            "rateMin": 1,
+                            "rateMax": 5,
+                            "minRateDescription": "not at all",
+                            "maxRateDescription": "extremely"
+                        },
+                        {
+                            "type": "rating",
                             "name": "I had to put a lot of effort into it",
                             "isRequired": true,
                             "rateMin": 1,
