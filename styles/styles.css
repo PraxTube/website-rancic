@@ -4,8 +4,8 @@
 }
 
 @font-face {
-  font-family: 'Daddy';
-  src: url('../../fonts/Daddy.woff') format('woff');
+  font-family: 'Azeret';
+  src: url('../../fonts/Azeret.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
@@ -13,7 +13,7 @@
 body {
   background-color: white;
   color: black;
-  font-family: 'Daddy';
+  font-family: 'Azeret';
   font-size: 21px;
 }
 
